@@ -4,39 +4,31 @@ import edu.uta.cse.proggen.classLevelElements.Type.Primitives;
 
 /**
  * Represents the <Result> sub-element of <Query> in the query xml.
- *  
+ * 
  * @author balamurugan
  *
  */
-public class QueryResult 
-{
-	private String 		name;
-	private int 		seqNumber;
-	private Primitives 	type;
-	
-	public QueryResult(
-			String name, 
-			int seqNumber, 
-			Primitives type) 
-	{
+public class QueryResult {
+	private String name;
+	private int seqNumber;
+	private Primitives type;
+
+	public QueryResult(String name, int seqNumber, Primitives type) {
 		super();
 		this.name = name;
 		this.seqNumber = seqNumber;
 		this.type = type;
 	}
 
-	public String getName() 
-	{
+	public String getName() {
 		return name;
 	}
 
-	public int getSeqNumber() 
-	{
+	public int getSeqNumber() {
 		return seqNumber;
 	}
 
-	public Primitives getType() 
-	{
+	public Primitives getType() {
 		return type;
 	}
 }

@@ -21,69 +21,58 @@ import edu.uta.cse.proggen.classLevelElements.Type.Primitives;
  * @author balamurugan
  *
  */
-public class QueryFileParser 
-{
+public class QueryFileParser {
 	private static Document document = null;
-	public 	static ArrayList<Query> queries = new ArrayList<Query>();
-	
+	public static ArrayList<Query> queries = new ArrayList<Query>();
+
 	/*
 	 * parse and construct query objects in memory as soon as this class is loaded
 	 * in the JVM.
 	 */
-	static
-	{
+	static {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		try
-		{
+		try {
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			document = builder.parse(new File(ConfigurationXMLParser.getProperty("queryFilename")));
 			parseQueryNodes();
-		}
-		catch(Exception e)
-		{
+		} catch (Exception e) {
 			System.out.println("Error parsing query XML. Continuing...");
 			e.printStackTrace();
 		}
 	}
-	
-	private static Node getRootNode()
-	{
+
+	private static Node getRootNode() {
 		return document.getDocumentElement();
 	}
-	
-	public static void parseQueryNodes()
-	{
+
+	public static void parseQueryNodes() {
 		Node root = getRootNode();
 		NodeList queryNodes = root.getChildNodes();
-		
+
 		int noOfQueryNodes = queryNodes.getLength();
-		
-		for(int i=0; i<noOfQueryNodes; i++)
-		{
+
+		for (int i = 0; i < noOfQueryNodes; i++) {
 			Node node = queryNodes.item(i);
-			if(node instanceof Element)
-			{
-				Element queryNode = (Element)node;
+			if (node instanceof Element) {
+				Element queryNode = (Element) node;
 				String queryString = queryNode.getAttribute("value");
-								
+
 				NodeList resultNodes = queryNode.getChildNodes();
 				int noOfResultNodes = resultNodes.getLength();
-				String name	= "";
+				String name = "";
 				int seqNumber = -1;
 				Primitives type;
-				
+
 				ArrayList<QueryResult> results = new ArrayList<QueryResult>();
 				HashSet<Primitives> typeSet = new HashSet<Primitives>();
-				for(int j=0; j<noOfResultNodes; j++)
-				{
+				for (int j = 0; j < noOfResultNodes; j++) {
 					Node resultNode = resultNodes.item(j);
-					if(resultNode instanceof Element)
-					{
+					if (resultNode instanceof Element) {
 						Element resultElement = (Element) resultNode;
 						name = resultElement.getAttribute("Name");
 						seqNumber = Integer.valueOf(resultElement.getAttribute("SeqNumber"));
 						type = Type.reverseLookup(resultElement.getAttribute("Type"));
-					
+
 						typeSet.add(type);
 						QueryResult queryResult = new QueryResult(name, seqNumber, type);
 						results.add(queryResult);

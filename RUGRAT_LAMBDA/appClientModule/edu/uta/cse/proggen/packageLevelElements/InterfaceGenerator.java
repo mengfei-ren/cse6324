@@ -8,7 +8,6 @@ import edu.uta.cse.proggen.classLevelElements.MethodSignature;
 import edu.uta.cse.proggen.configurationParser.ConfigurationXMLParser;
 import edu.uta.cse.proggen.util.ProgGenUtil;
 
-
 /**
  * Class to generate an interface.
  * 
@@ -17,51 +16,40 @@ import edu.uta.cse.proggen.util.ProgGenUtil;
  * @author balamurugan
  *
  */
-public class InterfaceGenerator 
-{
+public class InterfaceGenerator {
 	private ArrayList<MethodSignature> methodSignatures = new ArrayList<MethodSignature>();
 	private String name;
-	private int	numOfMethods;
-	
-	public InterfaceGenerator(String name, 
-			ArrayList<ClassGenerator> classList)
-	{
+	private int numOfMethods;
+
+	public InterfaceGenerator(String name, ArrayList<ClassGenerator> classList) {
 		this.name = name;
-						
-		//we need atleast one method per interface. not a marker interface.
+
+		// we need atleast one method per interface. not a marker interface.
 		int maxNumOfMethods = ConfigurationXMLParser.getPropertyAsInt("maxNoOfMethodsPerInterface");
 		int numOfMethods;
-		if(maxNumOfMethods < 1)
-		{
+		if (maxNumOfMethods < 1) {
 			numOfMethods = 1;
-		}
-		else
-		{
+		} else {
 			numOfMethods = new Random().nextInt(maxNumOfMethods);
 		}
-		
-		if(numOfMethods == 0)
-		{
+
+		if (numOfMethods == 0) {
 			numOfMethods = 1;
 		}
 		this.numOfMethods = numOfMethods;
-		
-		for(int i=0; i<numOfMethods; i++)
-		{
-			//use this method only to extract the signature and discard them
-			Method method = Method.generateMethodForInterface(
-					ProgGenUtil.maxNoOfParameters, 
-					classList, 
-					name+"Method"+i);
+
+		for (int i = 0; i < numOfMethods; i++) {
+			// use this method only to extract the signature and discard them
+			Method method = Method.generateMethodForInterface(ProgGenUtil.maxNoOfParameters, classList,
+					name + "Method" + i);
 			methodSignatures.add(method.getMethodSignature());
 		}
 	}
-	
-	public ArrayList<MethodSignature> getMethodSignatures() 
-	{
+
+	public ArrayList<MethodSignature> getMethodSignatures() {
 		return methodSignatures;
 	}
-	
+
 	public int getNumOfMethods() {
 		return numOfMethods;
 	}
@@ -69,21 +57,18 @@ public class InterfaceGenerator
 	public String getName() {
 		return name;
 	}
-	
-	public String getPackageName()
-	{
+
+	public String getPackageName() {
 		return "package com.accenture.lab.carfast.test;\n\n\n";
 	}
 
-	public String toString()
-	{
+	public String toString() {
 		StringBuilder builder = new StringBuilder(getPackageName());
 		builder.append("public interface");
 		builder.append(" ");
 		builder.append(name);
 		builder.append("\n{\n");
-		for(MethodSignature signature : methodSignatures)
-		{
+		for (MethodSignature signature : methodSignatures) {
 			builder.append(signature);
 			builder.append(";\n");
 		}

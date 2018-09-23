@@ -6,13 +6,10 @@ package edu.uta.cse.proggen.nodes;
  * @author balamurugan
  *
  */
-public class Operand 
-	extends Expression
-{
+public class Operand extends Expression {
 	protected String literal = "";
-	
-	public String toString()
-	{
+
+	public String toString() {
 		return literal;
 	}
 }

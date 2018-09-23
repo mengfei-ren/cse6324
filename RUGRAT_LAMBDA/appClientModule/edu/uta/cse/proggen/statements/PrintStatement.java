@@ -10,25 +10,21 @@ import edu.uta.cse.proggen.classLevelElements.Method;
  * @author balamurugan
  *
  */
-public class PrintStatement 
-{
+public class PrintStatement {
 	private Method method;
-	
-	public PrintStatement(Method method)
-	{
+
+	public PrintStatement(Method method) {
 		this.method = method;
 	}
-	
-	public String toString()
-	{
+
+	public String toString() {
 		String stmt = "";
 		Random rand = new Random();
 		int option = rand.nextInt(5);
 
-		for (int i = 0; i <= option; i++) 
-		{
-			stmt = "System.out.println(\""+ method.getAssociatedClass().getFileName()
-			+ " - " + method.getName() + "- LineInMethod: " + method.getLoc() + "\");" + "\n";
+		for (int i = 0; i <= option; i++) {
+			stmt = "System.out.println(\"" + method.getAssociatedClass().getFileName() + " - " + method.getName()
+					+ "- LineInMethod: " + method.getLoc() + "\");" + "\n";
 		}
 
 		method.setLoc(method.getLoc() + option + 1);

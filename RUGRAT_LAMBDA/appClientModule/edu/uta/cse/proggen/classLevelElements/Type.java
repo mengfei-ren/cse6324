@@ -1,14 +1,13 @@
 package edu.uta.cse.proggen.classLevelElements;
 
 /**
- * This class represents the type for every entity(class variables, local variables,
- * parameters, return values) in the generated class.
+ * This class represents the type for every entity(class variables, local
+ * variables, parameters, return values) in the generated class.
  * 
  * @author balamurugan
  *
  */
-public class Type 
-{
+public class Type {
 	/**
 	 * The primitives enum class encapsulates the allowed primitives in RUGRAT which
 	 * also includes OBJECT.
@@ -18,122 +17,95 @@ public class Type
 	 * @author balamurugan
 	 *
 	 */
-	public enum Primitives
-	{ 
+	public enum Primitives {
 		CHAR, BYTE, SHORT, INT, LONG, FLOAT, DOUBLE, STRING, OBJECT;
-		
-		public String toString()
-		{
-			switch (this) 
-			{
-				case CHAR:
-					return "char";
 
-				case BYTE:
-					return "byte";
+		public String toString() {
+			switch (this) {
+			case CHAR:
+				return "char";
 
-				case SHORT:
-					return "short";
+			case BYTE:
+				return "byte";
 
-				case INT:
-					return "int";
+			case SHORT:
+				return "short";
 
-				case LONG:
-					return "long";
+			case INT:
+				return "int";
 
-				case FLOAT:
-					return "float";
+			case LONG:
+				return "long";
 
-				case DOUBLE:
-					return "double";
+			case FLOAT:
+				return "float";
 
-				case STRING:
-					return "String";
+			case DOUBLE:
+				return "double";
 
-				default:
-					return "Object";
+			case STRING:
+				return "String";
+
+			default:
+				return "Object";
 			}
 		}
 	}
-	
-	Primitives	p;
-	String 		name;
-		
-	public Type(Primitives primitive, 
-			String name)
-	{
+
+	Primitives p;
+	String name;
+
+	public Type(Primitives primitive, String name) {
 		this.p = primitive;
 		this.name = name;
 	}
-	
-	public Primitives getType()
-	{
+
+	public Primitives getType() {
 		return p;
 	}
-	
-	public String toString()
-	{
-		//if its an object return the classname.
-		if(p.equals(Primitives.OBJECT))
-		{
+
+	public String toString() {
+		// if its an object return the classname.
+		if (p.equals(Primitives.OBJECT)) {
 			return name;
 		}
-		
+
 		return p.toString();
 	}
-	
-	public boolean equals(Object obj)
-	{
-		if(obj == null)
+
+	public boolean equals(Object obj) {
+		if (obj == null)
 			return false;
-		
-		if(! (obj instanceof Type) )
+
+		if (!(obj instanceof Type))
 			return false;
-		
-		Type obj1 = (Type)obj;
-		
-		if(this.toString() != obj1.toString())
+
+		Type obj1 = (Type) obj;
+
+		if (this.toString() != obj1.toString())
 			return false;
-		
+
 		return true;
 	}
-	
-	public static Primitives reverseLookup(String primitive)
-	{
-		if(primitive.equalsIgnoreCase("char"))
-		{
+
+	public static Primitives reverseLookup(String primitive) {
+		if (primitive.equalsIgnoreCase("char")) {
 			return Primitives.CHAR;
-		}
-		else if(primitive.equalsIgnoreCase("byte"))
-		{
+		} else if (primitive.equalsIgnoreCase("byte")) {
 			return Primitives.BYTE;
-		}
-		else if(primitive.equalsIgnoreCase("short"))
-		{
+		} else if (primitive.equalsIgnoreCase("short")) {
 			return Primitives.SHORT;
-		}
-		else if(primitive.equalsIgnoreCase("int"))
-		{
+		} else if (primitive.equalsIgnoreCase("int")) {
 			return Primitives.INT;
-		}
-		else if(primitive.equalsIgnoreCase("long"))
-		{
+		} else if (primitive.equalsIgnoreCase("long")) {
 			return Primitives.LONG;
-		}
-		else if(primitive.equalsIgnoreCase("float"))
-		{
-			return Primitives.FLOAT; 
-		}
-		else if(primitive.equalsIgnoreCase("double"))
-		{
+		} else if (primitive.equalsIgnoreCase("float")) {
+			return Primitives.FLOAT;
+		} else if (primitive.equalsIgnoreCase("double")) {
 			return Primitives.DOUBLE;
-		}
-		else if(primitive.equals("String"))
-		{
+		} else if (primitive.equals("String")) {
 			return Primitives.STRING;
-		}
-		else
-		{
+		} else {
 			return Primitives.OBJECT;
 		}
 	}

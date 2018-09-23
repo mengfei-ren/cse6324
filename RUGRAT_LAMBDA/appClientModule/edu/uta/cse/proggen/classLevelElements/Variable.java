@@ -11,47 +11,40 @@ import edu.uta.cse.proggen.packageLevelElements.ClassGenerator;
  * @author balamurugan
  *
  */
-public class Variable 
-	extends Field
-{
-	protected Variable(String name, ArrayList<ClassGenerator> classList) 
-	{
+public class Variable extends Field {
+	protected Variable(String name, ArrayList<ClassGenerator> classList) {
 		super(name, classList);
-		
-		//variables are not arrays
+
+		// variables are not arrays
 		this.isArray = false;
-		
-		//variables are not static
-		this.isStatic = false;
-	}
-	
-	protected Variable(String name, Primitives primitive)
-	{
-		super(name, primitive);
-		
-		//variables are not arrays
-		this.isArray = false;
-		
-		//variables are not static
+
+		// variables are not static
 		this.isStatic = false;
 	}
 
-	public static Variable generateVariable(String name, ArrayList<ClassGenerator> classList)
-	{
+	protected Variable(String name, Primitives primitive) {
+		super(name, primitive);
+
+		// variables are not arrays
+		this.isArray = false;
+
+		// variables are not static
+		this.isStatic = false;
+	}
+
+	public static Variable generateVariable(String name, ArrayList<ClassGenerator> classList) {
 		return new Variable(name, classList);
 	}
-	
-	public static Variable generateRecursionCounterVariable()
-	{
+
+	public static Variable generateRecursionCounterVariable() {
 		return new Variable("recursionCounter", Primitives.INT);
 	}
-	
-	public boolean equals(Object obj)
-	{
-		if(obj == null)
+
+	public boolean equals(Object obj) {
+		if (obj == null)
 			return false;
-		
-		if(! super.equals(obj) )
+
+		if (!super.equals(obj))
 			return false;
 
 		return true;

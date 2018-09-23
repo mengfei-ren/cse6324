@@ -10,9 +10,8 @@ package edu.uta.cse.proggen.nodes;
 public class Operator {
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return "Not extended";
 	}
-
 
 }

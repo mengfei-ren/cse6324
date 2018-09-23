@@ -21,63 +21,57 @@ import edu.uta.cse.proggen.util.ProgGenUtil;
  * @author balamurugan
  *
  */
-public class ClassGenerator 
-{
-	private String 	fileName;
-	private int 	numOfVars;
-	private int 	percent;
-	private int 	loc;
-	private int 	nestedIfCounter = 0;
-	private int 	maxNestedIfs = 30;
-	private int 	maxAllowedMethodCalls = ProgGenUtil.maxNoOfMethodCalls;
-	private int 	methCounter = 0;
-	private int 	methCalledCounter = 0;
-	private int 	locPerMethod = 0;
-	private boolean	preGenerate = false;
-	
-	/** Holds actual class body*/
-	private String 	program = "";
-	private int 	numberOfMethods = 1;
-	
-	private Random 							rand = new Random(System.currentTimeMillis());
-	
-	private Set<Field> 						usedFields	= new HashSet<Field>();
-	private ArrayList<Field> 				fields = new ArrayList<Field>();
-	
-	private ClassGenerator 					superClass = null;
-	private HashSet<ClassGenerator> 		subClasses = new  HashSet<ClassGenerator>();
-	
-	private ArrayList<Method> 				methodList = new ArrayList<Method>();
-	private ArrayList<MethodSignature> 		overriddenMethods = new ArrayList<MethodSignature>();
-	private ArrayList<MethodSignature>		methodSignatures = new ArrayList<MethodSignature>();
-	
-	private ArrayList<InterfaceGenerator> 	interfaceList = new ArrayList<InterfaceGenerator>();
-	private Set<Primitives>					returnTypeSet = new HashSet<Primitives>();
-	
-	
+public class ClassGenerator {
+	private String fileName;
+	private int numOfVars;
+	private int percent;
+	private int loc;
+	private int nestedIfCounter = 0;
+	private int maxNestedIfs = 30;
+	private int maxAllowedMethodCalls = ProgGenUtil.maxNoOfMethodCalls;
+	private int methCounter = 0;
+	private int methCalledCounter = 0;
+	private int locPerMethod = 0;
+	private boolean preGenerate = false;
+
+	/** Holds actual class body */
+	private String program = "";
+	private int numberOfMethods = 1;
+
+	private Random rand = new Random(System.currentTimeMillis());
+
+	private Set<Field> usedFields = new HashSet<Field>();
+	private ArrayList<Field> fields = new ArrayList<Field>();
+
+	private ClassGenerator superClass = null;
+	private HashSet<ClassGenerator> subClasses = new HashSet<ClassGenerator>();
+
+	private ArrayList<Method> methodList = new ArrayList<Method>();
+	private ArrayList<MethodSignature> overriddenMethods = new ArrayList<MethodSignature>();
+	private ArrayList<MethodSignature> methodSignatures = new ArrayList<MethodSignature>();
+
+	private ArrayList<InterfaceGenerator> interfaceList = new ArrayList<InterfaceGenerator>();
+	private Set<Primitives> returnTypeSet = new HashSet<Primitives>();
+
 	/**
 	 * @param fileName
 	 * @param loc
 	 * @param superClass
 	 */
-	public ClassGenerator(String fileName, 
-			int loc, 
-			ClassGenerator superClass) 
-	{
+	public ClassGenerator(String fileName, int loc, ClassGenerator superClass) {
 		super();
 		this.fileName = fileName;
-		//Atleast one variable per class. Added in response to Ishtiaque's comment.
+		// Atleast one variable per class. Added in response to Ishtiaque's comment.
 		int maxNoOfVars = ConfigurationXMLParser.getPropertyAsInt("maxNoOfClassFields");
 		int minNoOfFields = ConfigurationXMLParser.getPropertyAsInt("minNoOfClassFields");
-		
+
 		// to avoid Illegal argument exception
-		if(maxNoOfVars != 0)
+		if (maxNoOfVars != 0)
 			this.numOfVars = new Random().nextInt(maxNoOfVars);
 		else
 			this.numOfVars = 0;
-		
-		if(numOfVars < minNoOfFields)
-		{
+
+		if (numOfVars < minNoOfFields) {
 			numOfVars = minNoOfFields;
 		}
 		this.numberOfMethods = 0;
@@ -90,175 +84,150 @@ public class ClassGenerator
 
 	/**
 	 * pre-generation determines the class members, variables and method signatures
+	 * 
 	 * @param classList
 	 * @param preGeneratedClasses
 	 */
 	public void preGenerateForMethodSignature(ArrayList<ClassGenerator> classList,
-			HashSet<String> preGeneratedClasses) 
-	{
-		if(preGenerate)
-		{
-			//pre generation should happen only once.
+			HashSet<String> preGeneratedClasses) {
+		if (preGenerate) {
+			// pre generation should happen only once.
 			return;
 		}
 		// superclass should have its methods signature ready first
-		if(this.getSuperClass() != null &&
-				(!preGeneratedClasses.contains(this.getSuperClass().getFileName())))
-		{
+		if (this.getSuperClass() != null && (!preGeneratedClasses.contains(this.getSuperClass().getFileName()))) {
 			this.getSuperClass().preGenerateForMethodSignature(classList, preGeneratedClasses);
 		}
-		
+
 		// add class fields
-		//classList is used all the way down to "new Type()"
+		// classList is used all the way down to "new Type()"
 		generateClassFields(classList);
-		
+
 		System.out.println("calculating number of methods...");
-		//calculate number of methods
+		// calculate number of methods
 		calculateNumberOfMethods();
-		
+
 		System.out.println("overriding interface methods...");
-		//first override methods of implemented interfaces
+		// first override methods of implemented interfaces
 		overrideInterfaceMethods(classList);
-		
+
 		System.out.println("generating member method signatures...");
 		generateMethodSignatures(classList);
-		
+
 		preGeneratedClasses.add(fileName);
 		preGenerate = true;
 	}
-	
+
 	/**
-	 * Generates the actual body or content of the class 
-	 * and updates the set  'generatedClasses' Set of 
-	 * @param classList List of created class objects
-	 * @param generatedClasses Set of already generated class names
-	 */	
-	public void generate(ArrayList<ClassGenerator> classList, 
-			HashSet<String> generatedClasses, 
-			HashSet<String> preGeneratedClasses)
-	{
+	 * Generates the actual body or content of the class and updates the set
+	 * 'generatedClasses' Set of
+	 * 
+	 * @param classList
+	 *            List of created class objects
+	 * @param generatedClasses
+	 *            Set of already generated class names
+	 */
+	public void generate(ArrayList<ClassGenerator> classList, HashSet<String> generatedClasses,
+			HashSet<String> preGeneratedClasses) {
 		program = "";
-		
-		if(this.getSuperClass() != null &&
-				(!generatedClasses.contains(this.getSuperClass().getFileName())))
-		{
+
+		if (this.getSuperClass() != null && (!generatedClasses.contains(this.getSuperClass().getFileName()))) {
 			this.getSuperClass().generate(classList, generatedClasses, preGeneratedClasses);
 		}
-		
-		if(!preGenerate)
-		{
+
+		if (!preGenerate) {
 			preGenerateForMethodSignature(classList, preGeneratedClasses);
 		}
-		
+
 		// append package name
 		appendPackageName();
-		
-		//append import statements
-		if(ProgGenUtil.useQueries)
-		{
+
+		// append import statements
+		if (ProgGenUtil.useQueries) {
 			appendImportStatements();
 		}
 
 		System.out.println("appending classname...");
 		// append class name
 		appendClassName();
-		
+
 		System.out.println("Injecting contents...");
-		//append injected contents from external file
+		// append injected contents from external file
 		appendInjectedContents();
 
 		System.out.println("appending field names...");
 		// append field names
 		appendFieldNames();
-		
+
 		System.out.println("generating class methods...");
-		//generate methods
+		// generate methods
 		generateMethods(classList);
-		
+
 		System.out.println("writing main...");
 		generateMain();
-		
-		//generate SingleEntry for CarFast
+
+		// generate SingleEntry for CarFast
 		System.out.println("writing singleEntry.....");
 		generateSingleEntry();
-		
+
 		System.out.println("writing end of class...");
-		//write end of class
+		// write end of class
 		generateEndOfClass();
-		
+
 		generatedClasses.add(this.getFileName());
 	}
-	
-	private void appendImportStatements()
-	{
+
+	private void appendImportStatements() {
 		program += "import java.sql.ResultSet;\n";
 		program += "import java.util.Random;\n\n\n";
 	}
-	
-	private void appendInjectedContents() 
-	{
+
+	private void appendInjectedContents() {
 		program += ProgGenUtil.getInjectContents();
 	}
 
-	private void overrideInterfaceMethods(ArrayList<ClassGenerator> classList) 
-	{
-		for(InterfaceGenerator interfaceGen : interfaceList)
-		{
-			for(MethodSignature signature : interfaceGen.getMethodSignatures())
-			{
+	private void overrideInterfaceMethods(ArrayList<ClassGenerator> classList) {
+		for (InterfaceGenerator interfaceGen : interfaceList) {
+			for (MethodSignature signature : interfaceGen.getMethodSignatures()) {
 				Primitives returnType = signature.getReturnType();
-				if( returnType != Primitives.OBJECT )
-				{
+				if (returnType != Primitives.OBJECT) {
 					returnTypeSet.add(returnType);
 				}
 			}
 			methodSignatures.addAll(interfaceGen.getMethodSignatures());
 		}
 	}
-	
-	private void generateMethods(ArrayList<ClassGenerator> classList)
-	{
-		for(MethodSignature signature : methodSignatures)
-		{
-			Method method = Method.getMethod(signature, 
-								this, 
-								classList,
-								locPerMethod,
-								this.maxNestedIfs,
-								this.maxAllowedMethodCalls);
+
+	private void generateMethods(ArrayList<ClassGenerator> classList) {
+		for (MethodSignature signature : methodSignatures) {
+			Method method = Method.getMethod(signature, this, classList, locPerMethod, this.maxNestedIfs,
+					this.maxAllowedMethodCalls);
 			program += method;
 			methodList.add(method);
 		}
 	}
 
-	private void calculateNumberOfMethods() 
-	{
+	private void calculateNumberOfMethods() {
 		int totalNumberOfMethods = 0;
 		numberOfMethods = 0;
-		
-		//atleast two methods
-		if(ProgGenUtil.maxNoOfMethodsPerClass < 2)
-		{
+
+		// atleast two methods
+		if (ProgGenUtil.maxNoOfMethodsPerClass < 2) {
 			System.out.println("Setting number of methods per class as 2.");
 			numberOfMethods = 2;
-		}
-		else if(ProgGenUtil.maxNoOfMethodsPerClass == 2)
-		{
+		} else if (ProgGenUtil.maxNoOfMethodsPerClass == 2) {
 			numberOfMethods = 2;
-		}
-		else
-		{
+		} else {
 			numberOfMethods = rand.nextInt(ProgGenUtil.maxNoOfMethodsPerClass - 2) + 2;
 		}
-		
+
 		totalNumberOfMethods += numberOfMethods;
-		//add the number of methods from the implemented interfaces.
-		for(InterfaceGenerator interfaceGen : interfaceList)
-		{
+		// add the number of methods from the implemented interfaces.
+		for (InterfaceGenerator interfaceGen : interfaceList) {
 			totalNumberOfMethods += interfaceGen.getNumOfMethods();
 		}
 
-		locPerMethod = this.loc/totalNumberOfMethods;
+		locPerMethod = this.loc / totalNumberOfMethods;
 	}
 
 	public int getMaxNestedIfs() {
@@ -309,11 +278,10 @@ public class ClassGenerator
 		this.interfaceList = interfaceList;
 	}
 
-	public int getPercent() 
-	{
+	public int getPercent() {
 		return percent;
 	}
-	
+
 	public ArrayList<Method> getMethodList() {
 		return this.methodList;
 	}
@@ -351,43 +319,32 @@ public class ClassGenerator
 	}
 
 	@Override
-	public String toString() 
-	{
+	public String toString() {
 		return program;
 	}
-	
-	private void generateMain()
-	{
+
+	private void generateMain() {
 		program += "\npublic static void main(String args[]){\n";
-		program += this.fileName + " obj = new " + this.fileName +"();\n";
-		for(Method method : this.methodList)
-		{
+		program += this.fileName + " obj = new " + this.fileName + "();\n";
+		for (Method method : this.methodList) {
 			StringBuilder builder = new StringBuilder();
-			
+
 			MethodSignature signature = method.getMethodSignature();
-			if(!signature.isStatic())
-			{
-				builder.append("obj."); 
+			if (!signature.isStatic()) {
+				builder.append("obj.");
 			}
-			
+
 			builder.append(signature.getName() + "(");
-			
-			for(Variable variable : signature.getParameterList())
-			{
+
+			for (Variable variable : signature.getParameterList()) {
 				Type type = variable.getType();
-				if( type.getType() == Primitives.OBJECT)
-				{
+				if (type.getType() == Primitives.OBJECT) {
 					builder.append("new " + type.toString() + "()");
 					builder.append(",");
-				}
-				else
-				{
-					if(variable.getName().equals("recursionCounter"))
-					{
+				} else {
+					if (variable.getName().equals("recursionCounter")) {
 						builder.append(new Random().nextInt(ProgGenUtil.maxRecursionDepth));
-					}
-					else
-					{
+					} else {
 						builder.append(new Literal(type.getType()));
 					}
 					builder.append(",");
@@ -396,73 +353,61 @@ public class ClassGenerator
 			String str = builder.toString();
 			str = str.substring(0, str.length() - 1);
 			str += ");\n";
-			
+
 			program += str;
 		}
 		program += "}\n";
 	}
-	
-	
-	//Single Entry point for CarFast
-	//TODO: support other parameter types
-	private void generateSingleEntry()
-	{
+
+	// Single Entry point for CarFast
+	// TODO: support other parameter types
+	private void generateSingleEntry() {
 		program += "\npublic static void singleEntry(";
-		
+
 		StringBuilder param = new StringBuilder();
-		
-		for(int i =0; i< ProgGenUtil.maxNoOfParameters; i++)
-			param.append("int i"+i+",");
-		
+
+		for (int i = 0; i < ProgGenUtil.maxNoOfParameters; i++)
+			param.append("int i" + i + ",");
+
 		String st = param.toString();
-		st = st.substring(0, st.length()-1);
+		st = st.substring(0, st.length() - 1);
 		st += "){\n";
-		
+
 		program += st;
-		
-		
-		program += this.fileName + " obj = new " + this.fileName +"();\n";
-		for(Method method : this.methodList)
-		{
-			HashSet<Integer> set = new HashSet<Integer>(); 
+
+		program += this.fileName + " obj = new " + this.fileName + "();\n";
+		for (Method method : this.methodList) {
+			HashSet<Integer> set = new HashSet<Integer>();
 			StringBuilder builder = new StringBuilder();
-			
+
 			MethodSignature signature = method.getMethodSignature();
-			if(!signature.isStatic())
-			{
-				builder.append("obj."); 
+			if (!signature.isStatic()) {
+				builder.append("obj.");
 			}
-			
+
 			builder.append(signature.getName() + "(");
-			
-			for(Variable variable : signature.getParameterList())
-			{
+
+			for (Variable variable : signature.getParameterList()) {
 				Type type = variable.getType();
-				if( type.getType() == Primitives.OBJECT)
-				{
+				if (type.getType() == Primitives.OBJECT) {
 					builder.append("new " + type.toString() + "()");
 					builder.append(",");
-				}
-				else
-				{
-					if(variable.getName().equals("recursionCounter"))
-					{
+				} else {
+					if (variable.getName().equals("recursionCounter")) {
 						builder.append(new Random().nextInt(ProgGenUtil.maxRecursionDepth));
-					}
-					else
-					{
-						if(type.getType() != Primitives.INT )
+					} else {
+						if (type.getType() != Primitives.INT)
 							builder.append(new Literal(type.getType()));
-						else{
+						else {
 							boolean addedToSet = false;
-							do{
+							do {
 								int var = new Random().nextInt(ProgGenUtil.maxNoOfParameters);
 								addedToSet = set.add(var);
-								if(addedToSet){
-									builder.append("i"+var);
+								if (addedToSet) {
+									builder.append("i" + var);
 								}
-							}while(!addedToSet);
-							
+							} while (!addedToSet);
+
 						}
 					}
 					builder.append(",");
@@ -471,167 +416,132 @@ public class ClassGenerator
 			String str = builder.toString();
 			str = str.substring(0, str.length() - 1);
 			str += ");\n";
-			
+
 			program += str;
 		}
 		program += "}\n";
 	}
-	
-	private void generateEndOfClass() 
-	{
+
+	private void generateEndOfClass() {
 		// closing brace of the class
-		program += "\n}"; 
+		program += "\n}";
 	}
 
-	private MethodSignature overRiddenMethod(ArrayList<ClassGenerator> classList,
-			int loc)
-	{
+	private MethodSignature overRiddenMethod(ArrayList<ClassGenerator> classList, int loc) {
 		ArrayList<MethodSignature> superClassMethodSignatures = this.superClass.methodSignatures;
-		MethodSignature methodToOverride = superClassMethodSignatures.get(rand.nextInt(superClassMethodSignatures.size()));
+		MethodSignature methodToOverride = superClassMethodSignatures
+				.get(rand.nextInt(superClassMethodSignatures.size()));
 		int counter = this.superClass.numberOfMethods;
-		
-		while( ( overriddenMethods.contains(methodToOverride) 
-				|| methodSignatures.contains(methodToOverride) )
-				&& counter > 0 )
-		{
+
+		while ((overriddenMethods.contains(methodToOverride) || methodSignatures.contains(methodToOverride))
+				&& counter > 0) {
 			methodToOverride = superClassMethodSignatures.get(rand.nextInt(superClassMethodSignatures.size()));
 			counter--;
 		}
-		
-		if(counter == 0)
-		{
+
+		if (counter == 0) {
 			System.out.println("overriddenMethod()::returning null due to lack of methods in super class.");
 			return null;
 		}
-		
+
 		overriddenMethods.add(methodToOverride);
 		Primitives returnType = methodToOverride.getReturnType();
-		if(returnType != Primitives.OBJECT)
-		{
+		if (returnType != Primitives.OBJECT) {
 			returnTypeSet.add(returnType);
 		}
 		return methodToOverride;
 	}
 
-
-	private void generateMethodSignatures(ArrayList<ClassGenerator> classList) 
-	{
-		for (int i = 0; i<numberOfMethods; i++) 
-		{
-			if(this.superClass != null)
-			{
-				//flip a coin(1 out of 3) to decide for method override
+	private void generateMethodSignatures(ArrayList<ClassGenerator> classList) {
+		for (int i = 0; i < numberOfMethods; i++) {
+			if (this.superClass != null) {
+				// flip a coin(1 out of 3) to decide for method override
 				int choiceOverride = rand.nextInt(3);
-				if(choiceOverride == 0)
-				{
+				if (choiceOverride == 0) {
 					MethodSignature overridenMethod = overRiddenMethod(classList, locPerMethod);
-					if(overridenMethod != null)
-					{
+					if (overridenMethod != null) {
 						methodSignatures.add(overridenMethod);
 						continue;
 					}
-					//else fallthrough and generate normal class method
+					// else fallthrough and generate normal class method
 				}
 			}
-			
-			//Basically creating MethodSignature
-			Method method =  Method.generateMethod(
-						this,
-						ProgGenUtil.maxNoOfParameters, 
-						classList, 
-						this.fileName + "method" + i,
-						locPerMethod,
-						this.maxNestedIfs,
-						this.maxAllowedMethodCalls,
-						false);
-				
+
+			// Basically creating MethodSignature
+			Method method = Method.generateMethod(this, ProgGenUtil.maxNoOfParameters, classList,
+					this.fileName + "method" + i, locPerMethod, this.maxNestedIfs, this.maxAllowedMethodCalls, false);
+
 			methodSignatures.add(method.getMethodSignature());
 			Primitives returnType = method.getReturnType();
-			if(returnType != Primitives.OBJECT)
-			{
+			if (returnType != Primitives.OBJECT) {
 				returnTypeSet.add(returnType);
 			}
 		}
 	}
-	
+
 	/**
 	 * Gives the corresponding class name
+	 * 
 	 * @return Name of the Class
 	 */
-	public String getFileName() 
-	{
+	public String getFileName() {
 		return fileName;
 	}
 
-	private void appendFieldNames() 
-	{
-		for (int i = 0; i < fields.size(); i++) 
-		{
+	private void appendFieldNames() {
+		for (int i = 0; i < fields.size(); i++) {
 			program += fields.get(i).getFieldDeclaration() + ";\n";
 		}
 		program += "\n\n";
 	}
 
-	private void appendClassName() 
-	{
+	private void appendClassName() {
 		program += "public class " + fileName;
-		
-		if(this.superClass != null)
-		{
+
+		if (this.superClass != null) {
 			program += " extends " + superClass.getFileName();
 			superClass.addSubClass(this);
 		}
-		
-		if(this.interfaceList.size()>0)
-		{
+
+		if (this.interfaceList.size() > 0) {
 			program += " implements ";
-			for(InterfaceGenerator interfaceGen : interfaceList)
-			{
+			for (InterfaceGenerator interfaceGen : interfaceList) {
 				System.out.println("implementing interface : " + interfaceGen.getName());
 				program += interfaceGen.getName() + ", ";
 			}
-			
-			program = program.substring(0, program.length()-2);
+
+			program = program.substring(0, program.length() - 2);
 		}
-		
+
 		program += " {\n";
 	}
 
-	private void addSubClass(ClassGenerator classGenerator) 
-	{
+	private void addSubClass(ClassGenerator classGenerator) {
 		this.subClasses.add(classGenerator);
 	}
 
-	private void appendPackageName() 
-	{
+	private void appendPackageName() {
 		program += "package com.accenture.lab.carfast.test;\n\n\n";
 	}
 
-	private void generateClassFields(ArrayList<ClassGenerator> classList) 
-	{
-		for (int i = 0; i < numOfVars; i++) 
-		{
-			fields.add( Field.generateField("f" + i, classList) );
+	private void generateClassFields(ArrayList<ClassGenerator> classList) {
+		for (int i = 0; i < numOfVars; i++) {
+			fields.add(Field.generateField("f" + i, classList));
 		}
 	}
 
-	public void setNestedIfCounter(int nestedIfCounter) 
-	{
+	public void setNestedIfCounter(int nestedIfCounter) {
 		this.nestedIfCounter = nestedIfCounter;
 	}
 
-	public int getNestedIfCounter() 
-	{
+	public int getNestedIfCounter() {
 		return nestedIfCounter;
 	}
 
-	public ArrayList<MethodSignature> getMethodSignatures(Type returnType) 
-	{
+	public ArrayList<MethodSignature> getMethodSignatures(Type returnType) {
 		ArrayList<MethodSignature> list = new ArrayList<MethodSignature>();
-		for(MethodSignature signature : methodSignatures)
-		{
-			if(signature.getReturnType().equals(returnType.getType()))
-			{
+		for (MethodSignature signature : methodSignatures) {
+			if (signature.getReturnType().equals(returnType.getType())) {
 				list.add(signature);
 			}
 		}
