@@ -17,6 +17,7 @@ import edu.uta.cse.proggen.packageLevelElements.DBUtilGenerator;
 import edu.uta.cse.proggen.packageLevelElements.InterfaceGenerator;
 import edu.uta.cse.proggen.packageLevelElements.SingleEntryGenerator;
 import edu.uta.cse.proggen.packageLevelElements.TreeOfSingleEntryGenerator;
+import edu.uta.cse.proggen.ui.RugratUI;
 import edu.uta.cse.proggen.util.ProgGenUtil;
 
 /**
@@ -38,7 +39,7 @@ public class Start {
 		if (args.length == 1) {
 			pathToDir = args[0] + File.separator;
 		}
-
+		String outputpath="";
 		/* List of generated class objects: ClassGenerators */
 		ArrayList<ClassGenerator> list = new ArrayList<ClassGenerator>();
 		ArrayList<InterfaceGenerator> interfaceList = new ArrayList<InterfaceGenerator>();
@@ -95,10 +96,10 @@ public class Start {
 			File directory = new File(pathToDir + "TestPrograms" + File.separator + "com" + File.separator + "accenture"
 					+ File.separator + "lab" + File.separator + "carfast" + File.separator + "test");
 
+			outputpath=directory.getAbsolutePath();
 			if (!directory.exists()) {
 				System.out.println(directory.mkdirs());
 			}
-
 			for (int i = 0; i < noOfInterfaces; i++) {
 				InterfaceGenerator generator = new InterfaceGenerator(className + "Interface" + i, list);
 				interfaceList.add(generator);
@@ -155,6 +156,8 @@ public class Start {
 
 		// write the reachability matrix
 
+		new RugratUI(outputpath);
+
 		if (ConfigurationXMLParser.getProperty("doReachabilityMatrix").equals("no"))
 			return;
 
@@ -186,6 +189,8 @@ public class Start {
 			builder.append("\n");
 		}
 		writeReachabilityMatrix(builder.toString());
+		new RugratUI(pathToDir);
+
 	}
 
 	private static void writeReachabilityMatrix(String matrix) {

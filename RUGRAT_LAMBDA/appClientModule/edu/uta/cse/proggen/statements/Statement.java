@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Set;
 
+import edu.uta.cse.proggen.classLevelElements.Field;
 import edu.uta.cse.proggen.classLevelElements.Method;
 import edu.uta.cse.proggen.classLevelElements.Type;
 import edu.uta.cse.proggen.classLevelElements.Type.Primitives;
 import edu.uta.cse.proggen.expressions.AssignmentExpression;
+import edu.uta.cse.proggen.expressions.LambdaExpression;
 import edu.uta.cse.proggen.expressions.VariableGenerator;
 import edu.uta.cse.proggen.nodes.Operand;
 import edu.uta.cse.proggen.packageLevelElements.ClassGenerator;
@@ -27,7 +29,8 @@ public class Statement {
 		Random rand = new Random();
 		int option = 0;
 
-		option = rand.nextInt(100) % 3;
+		option = rand.nextInt(100) % 4;
+		System.out.println(option);
 		switch (option) {
 		case 0: // Assignment statement
 			stmt.stmt = new AssignmentExpression(method).toString();
@@ -75,7 +78,12 @@ public class Statement {
 				stmt.stmt = new PrintStatement(method).toString();
 			}
 			break;
+		case 3:
+			Field var1 = VariableGenerator.getRandomizedVariable(method);
+			Field var2 = VariableGenerator.getRandomizedVariable(method);
 
+			stmt.stmt= new LambdaExpression(var1, var2).toString();
+			break;
 		default:
 			stmt.stmt = new IfStmtIfStmt(method, classList).toString();
 		}
