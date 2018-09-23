@@ -3,6 +3,8 @@ package edu.uta.cse.proggen.ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -12,6 +14,7 @@ import java.util.Scanner;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTree;
@@ -35,22 +38,25 @@ public class RugratUI extends JFrame {
 
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-		JPanel jsp1 = new JPanel();
-		JPanel jsp2 = new JPanel();
+		JPanel jsp1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JPanel  jsp2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 	
 
-		// JScrollPane scrollFrame = new JScrollPane(jsp1);
 		jsp1.setAutoscrolls(true);
 		showFiles(jsp1, jsp2,path);
 		jsp1.setBackground(Color.WHITE);
 		jsp2.setBackground(Color.LIGHT_GRAY);
+		JScrollPane scrollPane1 = new JScrollPane();
+		scrollPane1.setViewportView (jsp1);
+		JScrollPane scrollPane2 = new JScrollPane();
+		scrollPane2.setViewportView (jsp2);
 
 		JTextArea fileContent = new JTextArea("");
 		fileContent.setEditable(false);
 		fileContent.setSize(jsp2.getMaximumSize());
 
 		jsp2.add(fileContent);
-		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, jsp1, jsp2);
+		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, scrollPane1, scrollPane2);
 
 		splitPane.setOneTouchExpandable(true);
 		splitPane.setResizeWeight(0.1);
@@ -77,7 +83,7 @@ public class RugratUI extends JFrame {
 
 		DefaultTreeModel treeModel = new DefaultTreeModel(root);
 		JTree tree = new JTree(treeModel);
-
+		tree.setFont(new Font("Arial", Font.PLAIN, 14));
 		tree.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				// TreePath tp = tree.getPathForLocation(me.getX(), me.getY());
@@ -105,6 +111,10 @@ public class RugratUI extends JFrame {
 						jsp2.setBackground(Color.WHITE);
 						JTextArea fileContent = (JTextArea) jsp2.getComponent(0);
 						fileContent.setText(text);
+						fileContent.setFont(new Font("Arial", Font.PLAIN, 14));
+						fileContent.setCaretPosition(0);
+
+
 						
 					}else {
 						JTextArea fileContent = (JTextArea) jsp2.getComponent(0);
