@@ -1,0 +1,42 @@
+<RUGRAT>
+<classNamePrefix>lambda</classNamePrefix>
+<noOfClasses>10</noOfClasses>
+<allowLambdaExpressions>yes</allowLambdaExpressions>
+<recursionProbability>0</recursionProbability>
+<maxAllowedMethodCalls>5</maxAllowedMethodCalls>
+<dbName></dbName>
+<totalLOC>100</totalLOC>
+<maxNoOfMethodsPerInterface>3</maxNoOfMethodsPerInterface>
+<callType>MCO1_1</callType>
+<allowArray>no</allowArray>
+<maxInheritanceDepth>2</maxInheritanceDepth>
+<maxNoOfParametersPerMethod>3</maxNoOfParametersPerMethod>
+<dbUsername></dbUsername>
+<password></password>
+<minNoOfParametersPerMethod>1</minNoOfParametersPerMethod>
+<maximumArraySize>2</maximumArraySize>
+<dbDriver></dbDriver>
+<allowIndirectRecursion>no</allowIndirectRecursion>
+<noOfInterfaces>5</noOfInterfaces>
+<probability>5</probability>
+<maxNoOfMethodsPerClass>3</maxNoOfMethodsPerClass>
+<maxNoOfClassFields>10</maxNoOfClassFields>
+<maxInterfacesToImplement>5</maxInterfacesToImplement>
+<maxRecursionDepth>2</maxRecursionDepth>
+<minNoOfClassFields>5</minNoOfClassFields>
+<minInheritanceDepth>1</minInheritanceDepth>
+<queryFilename></queryFilename>
+<noOfInheritanceChains>3</noOfInheritanceChains>
+<useQueries>false</useQueries>
+<maxValueForLoop>5</maxValueForLoop>
+<intMaxValue>10</intMaxValue>
+<injectFilename></injectFilename>
+<doReachabilityMatrix>no</doReachabilityMatrix>
+<maxNestedIfs>2</maxNestedIfs>
+<allowedTypes>
+	<type>char</type>
+	<type>int</type>
+	<type>String</type>
+	<type>Object</type>
+</allowedTypes>
+</RUGRAT>
