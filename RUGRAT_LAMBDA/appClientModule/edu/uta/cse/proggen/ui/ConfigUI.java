@@ -157,6 +157,9 @@ public class ConfigUI extends javax.swing.JFrame {
         jTextAllowIndirectRecursion = new JTextField();
         jLabelAllowIndirectRecursion = new JLabel();
         
+        //allowLambdaExpressions
+        jTextAllowLambdaExpressions = new JTextField();
+        jLabelAllowLambdaExpressions = new JLabel();
         
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -266,7 +269,11 @@ public class ConfigUI extends javax.swing.JFrame {
         jTextReachability.setName("reachabiltyMatrix");
         jTextReachability.setText("NO");
         jLabelReachability.setToolTipText("This will create a matrix of method caller-callee, it requires much memory space to build.");
-
+        
+        jTextAllowLambdaExpressions.setName("lambdaExps");
+        jTextAllowLambdaExpressions.setText("NO");
+        jLabelAllowLambdaExpressions.setToolTipText("This will generate lambda expressions.");
+        
         jCheckBox1.setText("char");
         jCheckBox1.setName("char"); // NOI18N
 
@@ -357,6 +364,8 @@ public class ConfigUI extends javax.swing.JFrame {
         jLabelAllowIndirectRecursion.setText("Allow indirect recursion (e.g. A-B-A )? (YES/NO)");
         
         jLabelReachability.setText("Create Reachability Matrix? (YES/NO)");
+        
+        jLabelAllowLambdaExpressions.setText("Create Lambda Expressions? (YES/NO)");
 
         jButton1.setText("Generate");
         jButton1.setName("generate"); // NOI18N
@@ -437,6 +446,7 @@ public class ConfigUI extends javax.swing.JFrame {
                             .addComponent(jLabel25)
                             .addComponent(jLabelAllowIndirectRecursion)
                             .addComponent(jLabelReachability)
+                            .addComponent(jLabelAllowLambdaExpressions)
                             .addComponent(jLabel1)
                             .addComponent(jLabel3)
                             .addComponent(jLabel26))
@@ -475,6 +485,7 @@ public class ConfigUI extends javax.swing.JFrame {
                                 .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jTextMinNoOfClassFields, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            	.addComponent(jTextAllowLambdaExpressions, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
@@ -638,7 +649,11 @@ public class ConfigUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 		.addComponent(jLabelReachability)
                 		.addComponent(jTextReachability, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                		.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)               
+                		.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        		.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                		.addComponent(jLabelAllowLambdaExpressions)
+                		.addComponent(jTextAllowLambdaExpressions, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                		.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED) 
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel17)
                     .addComponent(jCheckBox3)
@@ -815,6 +830,8 @@ public class ConfigUI extends javax.swing.JFrame {
 				jTextField23.setText(value);
 			else if(name.equals("callType"))
 				jTextField24.setText(value);
+			else if(name.equals("allowLambdaExpressions"))
+				jTextAllowLambdaExpressions.setText(value.toUpperCase());
 			else if(name.equals("allowedTypes"))
 			{
 				NodeList types = node.getChildNodes();
@@ -1146,7 +1163,16 @@ public class ConfigUI extends javax.swing.JFrame {
 			return;
 			
 		}			
-		properties.put("doReachabilityMatrix", doReachabilityMatrix); 
+		properties.put("doReachabilityMatrix", doReachabilityMatrix);
+		
+		String allowLambdaExpressions = jTextAllowLambdaExpressions.getText().toLowerCase();
+		if( !allowLambdaExpressions.equals("yes") && !allowLambdaExpressions.equals("no") )
+		{
+			JOptionPane.showMessageDialog(this, "Type either YES or NO", "Typo in \"Create Lambda Expressions?\"", JOptionPane.ERROR_MESSAGE);
+			return;
+			
+		}			
+		properties.put("allowLambdaExpressions", allowLambdaExpressions);
 			
 		boolean isChecked = false;
 				
@@ -1413,6 +1439,10 @@ public class ConfigUI extends javax.swing.JFrame {
     //AllowIndirectRecursion
     private javax.swing.JTextField jTextAllowIndirectRecursion;
     private javax.swing.JLabel jLabelAllowIndirectRecursion;
+    
+    //allowLambdaExpressions
+    private javax.swing.JTextField jTextAllowLambdaExpressions;
+    private javax.swing.JLabel jLabelAllowLambdaExpressions;
    
     // End of variables declaration//GEN-END:variables
 }

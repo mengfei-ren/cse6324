@@ -61,6 +61,9 @@ public class ProgGenUtil
 	//Using arrays as class field
 	public static String allowArray = ConfigurationXMLParser.getProperty("allowArray");
 	
+	//allowLambdaExpressions
+	public static boolean allowLambda = new Boolean(ConfigurationXMLParser.getProperty("allowLambdaExpressions")).booleanValue();
+	
 	/**
 	 * Determines the call type for the method calls generated within
 	 * a method body.
