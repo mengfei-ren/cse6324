@@ -1,4 +1,4 @@
-# cse6324
+# RUGRAT_LAMBDA
 Course Project for CSE6324 Fall18
 
 This project is a course project for CSE6324 Fall18 at UTA. The project will add Lambda Expessions to RUGRAT framework to generate Lambda Expressions in the test programs for program analysis tools.
