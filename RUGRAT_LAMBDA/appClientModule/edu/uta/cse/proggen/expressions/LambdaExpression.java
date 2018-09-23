@@ -33,12 +33,12 @@ public class LambdaExpression extends Expression{
 		
 		switch (numberOfParams) {
 		case 0:
-			str.append("()->");
-			str.append("System.out.println(\"No argument expression\");");
+			str.append("\n()->");
+			str.append("System.out.println(\"No argument expression\");\n");
 			break;
 		case 1:
 			
-			str.append("(");
+			str.append("\n(");
 			Primitives primitive = variableList.get(0).getType().getType();
 			str.append(variableList.get(0).toString());
 			str.append(")->");
@@ -48,14 +48,14 @@ public class LambdaExpression extends Expression{
 			if(primitive == Primitives.OBJECT ||primitive == Primitives.STRING) {
 				str.append(".toString()");
 			}
-			str.append(");");
+			str.append(");\n");
 
 			break;
 		case 2:
 			Primitives primitive1 = variableList.get(0).getType().getType();
 			Primitives primitive2 = variableList.get(1).getType().getType();
 
-			str.append("(");
+			str.append("\n(");
 			str.append(variableList.get(0).toString());
 			str.append(",");
 			str.append(variableList.get(0).toString());
@@ -72,7 +72,7 @@ public class LambdaExpression extends Expression{
 			if(primitive2 == Primitives.OBJECT ||primitive2 == Primitives.STRING) {
 				str.append(".toString()");
 			}
-			str.append(");");
+			str.append(");\n");
 
 			break;
 

@@ -79,9 +79,14 @@ public class Statement {
 			}
 			break;
 		case 3:
-			Field var1 = VariableGenerator.getRandomizedVariable(method);
-			Field var2 = VariableGenerator.getRandomizedVariable(method);
-
+			Field var1=null;
+			Field var2=null;
+			if(method.getParameterList().size()==2) {
+				var1 = VariableGenerator.getRandomizedVariable(method);
+			}
+			if(method.getParameterList().size()==3) {
+				var2 = VariableGenerator.getRandomizedVariable(method);
+			}
 			stmt.stmt= new LambdaExpression(var1, var2).toString();
 			break;
 		default:
