@@ -732,7 +732,7 @@ public class ConfigUI extends javax.swing.JFrame {
 		JOptionPane.showMessageDialog(this, labelString, "Information", JOptionPane.INFORMATION_MESSAGE);
 		this.setVisible(false);
 		Start.main(args);
-		System.exit(0);
+		//System.exit(0);
 	}
 
 	/** Saves configuration to a file without executing the program */
