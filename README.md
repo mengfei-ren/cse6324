@@ -27,3 +27,7 @@ Kasaghattaramachandra, Nagendra Prasad <nagendra.ramachandra@mavs.uta.edu>
 Panda, Saroj K <saroj.panda@mavs.uta.edu>
 
 Ren, Mengfei <mengfei.ren@mavs.uta.edu>
+
+References
+----------------------------------------------------
+[RUGRAT: Evaluating program analysis and testing tools and compilers with large generated random benchmark applications.](http://ranger.uta.edu/~csallner/papers/hussain16rugrat.pdf) Software: Practice and Experience. 2016
