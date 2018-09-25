@@ -29,7 +29,7 @@ public class Statement {
 		Random rand = new Random();
 		int option = 0;
 
-		option = rand.nextInt(100) % 4;
+		option = rand.nextInt(100) % 3;
 		System.out.println(option);
 		switch (option) {
 		case 0: // Assignment statement
@@ -78,7 +78,7 @@ public class Statement {
 				stmt.stmt = new PrintStatement(method).toString();
 			}
 			break;
-		case 3:
+		/*case 3:
 			Field var1=null;
 			Field var2=null;
 			if(method.getParameterList().size()==2) {
@@ -88,7 +88,7 @@ public class Statement {
 				var2 = VariableGenerator.getRandomizedVariable(method);
 			}
 			stmt.stmt= new LambdaExpression(var1, var2).toString();
-			break;
+			break;*/
 		default:
 			stmt.stmt = new IfStmtIfStmt(method, classList).toString();
 		}

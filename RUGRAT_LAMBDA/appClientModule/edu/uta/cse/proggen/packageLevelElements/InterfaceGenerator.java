@@ -16,7 +16,7 @@ import edu.uta.cse.proggen.util.ProgGenUtil;
  * @author balamurugan
  *
  */
-public class InterfaceGenerator {
+public class InterfaceGenerator  extends Generator{
 	private ArrayList<MethodSignature> methodSignatures = new ArrayList<MethodSignature>();
 	private String name;
 	private int numOfMethods;

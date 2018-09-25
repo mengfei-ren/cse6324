@@ -2,6 +2,7 @@ package edu.uta.cse.proggen.packageLevelElements;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 
@@ -12,6 +13,7 @@ import edu.uta.cse.proggen.classLevelElements.Type;
 import edu.uta.cse.proggen.classLevelElements.Variable;
 import edu.uta.cse.proggen.classLevelElements.Type.Primitives;
 import edu.uta.cse.proggen.configurationParser.ConfigurationXMLParser;
+import edu.uta.cse.proggen.expressions.LambdaExpression;
 import edu.uta.cse.proggen.expressions.Literal;
 import edu.uta.cse.proggen.util.ProgGenUtil;
 
@@ -52,6 +54,7 @@ public class ClassGenerator {
 
 	private ArrayList<InterfaceGenerator> interfaceList = new ArrayList<InterfaceGenerator>();
 	private Set<Primitives> returnTypeSet = new HashSet<Primitives>();
+	private ArrayList<FunctionalInterfaceGenerator> fiList = new ArrayList<FunctionalInterfaceGenerator>();
 
 	/**
 	 * @param fileName
@@ -126,13 +129,16 @@ public class ClassGenerator {
 	 *            List of created class objects
 	 * @param generatedClasses
 	 *            Set of already generated class names
+	 * @param functionalInterfaceList 
 	 */
 	public void generate(ArrayList<ClassGenerator> classList, HashSet<String> generatedClasses,
-			HashSet<String> preGeneratedClasses) {
+			HashSet<String> preGeneratedClasses, ArrayList<FunctionalInterfaceGenerator> functionalInterfaceList) {
 		program = "";
+		fiList = functionalInterfaceList;
+
 
 		if (this.getSuperClass() != null && (!generatedClasses.contains(this.getSuperClass().getFileName()))) {
-			this.getSuperClass().generate(classList, generatedClasses, preGeneratedClasses);
+			this.getSuperClass().generate(classList, generatedClasses, preGeneratedClasses, functionalInterfaceList);
 		}
 
 		if (!preGenerate) {
@@ -355,6 +361,12 @@ public class ClassGenerator {
 			str += ");\n";
 
 			program += str;
+		}
+		System.out.println("Start lambda expression generation");
+		for (Iterator iterator = fiList.iterator(); iterator.hasNext();) {
+			FunctionalInterfaceGenerator functionalInterfaceGenerator = (FunctionalInterfaceGenerator) iterator.next();
+			program += new LambdaExpression(functionalInterfaceGenerator).toString()+"\n";
+			System.out.println("lambda expression generated..");
 		}
 		program += "}\n";
 	}

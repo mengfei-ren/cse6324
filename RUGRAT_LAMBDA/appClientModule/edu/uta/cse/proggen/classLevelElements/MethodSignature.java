@@ -44,6 +44,7 @@ public class MethodSignature {
 			str += parameter.getFieldDeclaration() + ", ";
 		}
 
+		if(parameterList!=null && parameterList.size()>0)
 		str = str.substring(0, str.length() - 2);
 		str += ")";
 

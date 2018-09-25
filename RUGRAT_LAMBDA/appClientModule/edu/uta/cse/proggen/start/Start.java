@@ -14,8 +14,9 @@ import edu.uta.cse.proggen.classLevelElements.Method;
 import edu.uta.cse.proggen.configurationParser.ConfigurationXMLParser;
 import edu.uta.cse.proggen.packageLevelElements.ClassGenerator;
 import edu.uta.cse.proggen.packageLevelElements.DBUtilGenerator;
+import edu.uta.cse.proggen.packageLevelElements.FunctionalInterfaceGenerator;
+import edu.uta.cse.proggen.packageLevelElements.Generator;
 import edu.uta.cse.proggen.packageLevelElements.InterfaceGenerator;
-import edu.uta.cse.proggen.packageLevelElements.SingleEntryGenerator;
 import edu.uta.cse.proggen.packageLevelElements.TreeOfSingleEntryGenerator;
 import edu.uta.cse.proggen.ui.RugratUI;
 import edu.uta.cse.proggen.util.ProgGenUtil;
@@ -43,6 +44,8 @@ public class Start {
 		/* List of generated class objects: ClassGenerators */
 		ArrayList<ClassGenerator> list = new ArrayList<ClassGenerator>();
 		ArrayList<InterfaceGenerator> interfaceList = new ArrayList<InterfaceGenerator>();
+		ArrayList<FunctionalInterfaceGenerator> functionalInterfaceList = new ArrayList<FunctionalInterfaceGenerator>();
+
 		int numberOfClasses = 0;
 		int maxInheritanceDepth = 0;
 		int noOfInheritanceChains = 0;
@@ -105,7 +108,14 @@ public class Start {
 				interfaceList.add(generator);
 				writeToFile(generator);
 			}
-
+			
+			//create functional interface
+			FunctionalInterfaceGenerator fiGenerator = new FunctionalInterfaceGenerator(className + "FunctionalInterface" , list);
+			//remove the recursive counter that is added from the default interface method signature generator
+			fiGenerator.getMethodSignatures().getParameterList().remove(0);
+			functionalInterfaceList.add(fiGenerator);
+			writeToFile(fiGenerator);
+			
 			establishClassRelationships(inheritanceHierarchies, list);
 
 			establishClassInterfaceRelationships(interfaceList, list);
@@ -133,7 +143,7 @@ public class Start {
 			// based on the earlier version.
 			if (!generatedClasses.contains(generator.getFileName())) {
 				// call generate to construct the class contents
-				generator.generate(list, generatedClasses, preGeneratedClasses);
+				generator.generate(list, generatedClasses, preGeneratedClasses,functionalInterfaceList);
 			}
 			writeToFile(generator);
 		}
@@ -235,7 +245,7 @@ public class Start {
 		write(filename, generator.toString());
 	}
 
-	private static void writeToFile(InterfaceGenerator generator) {
+	private static void writeToFile(Generator generator) {
 		if (generator == null) {
 			return;
 		}

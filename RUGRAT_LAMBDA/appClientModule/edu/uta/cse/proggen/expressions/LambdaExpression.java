@@ -1,85 +1,99 @@
 package edu.uta.cse.proggen.expressions;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
-import edu.uta.cse.proggen.classLevelElements.Field;
 import edu.uta.cse.proggen.classLevelElements.Type.Primitives;
+import edu.uta.cse.proggen.classLevelElements.Variable;
 import edu.uta.cse.proggen.nodes.Expression;
+import edu.uta.cse.proggen.nodes.Operand;
+import edu.uta.cse.proggen.packageLevelElements.FunctionalInterfaceGenerator;
 
-public class LambdaExpression extends Expression{
+public class LambdaExpression extends Expression {
 
-	private List<Field> variableList = null;
+	private List<Variable> variableList = null;
 	private int numberOfParams = 0;
-	private String output="";
+	private String output = "";
+	FunctionalInterfaceGenerator functionalInterface;
 
-	public LambdaExpression(Field var1, Field var2) {
-		variableList = new ArrayList<Field>();
-		if (null != var1 && null != var2) {
-			variableList.add(var1);
-			variableList.add(var2);
-		} else if (null == var1 && null == var2) {
-			return;
-		} else {
-			Field v = (null == var1) ? var2 : var1;
-			variableList.add(v);
-		}
-		numberOfParams = variableList.size();
+	public LambdaExpression(FunctionalInterfaceGenerator functionalInterface) {
+		ArrayList<Variable> abstractMethodParameterList = functionalInterface.getMethodSignatures().getParameterList();
+		this.variableList = new ArrayList<Variable>();
+		this.variableList = abstractMethodParameterList;
+		this.numberOfParams = variableList.size();
+		this.functionalInterface = functionalInterface;
 
 	}
 
 	public String toString() {
 		StringBuffer str = new StringBuffer();
-		
-		switch (numberOfParams) {
-		case 0:
-			str.append("\n()->");
-			str.append("System.out.println(\"No argument expression\");\n");
-			break;
-		case 1:
-			
+		str.append(functionalInterface.getName()+" ");
+		str.append(functionalInterface.getName()+"obj = ");
+		StringBuilder namesStr = new StringBuilder();
+		StringBuilder valuesStr = new StringBuilder();
+
+
+		if (numberOfParams == 0) {
+			str.append("()->");
+		} else {
 			str.append("\n(");
-			Primitives primitive = variableList.get(0).getType().getType();
-			str.append(variableList.get(0).toString());
+
+			for (Iterator iterator = variableList.iterator(); iterator.hasNext();) {
+				Variable variable = (Variable) iterator.next();
+
+				namesStr = namesStr.length() > 0 ? namesStr.append(",").append(variable.getName())
+						: namesStr.append(variable.getName());
+
+			}
+			str.append(namesStr);
 			str.append(")->");
-			str.append("System.out.println(\"Value=");
-			str.append("\"+");
-			str.append(variableList.get(0).toString());
-			if(primitive == Primitives.OBJECT ||primitive == Primitives.STRING) {
-				str.append(".toString()");
-			}
-			str.append(");\n");
-
-			break;
-		case 2:
-			Primitives primitive1 = variableList.get(0).getType().getType();
-			Primitives primitive2 = variableList.get(1).getType().getType();
-
-			str.append("\n(");
-			str.append(variableList.get(0).toString());
-			str.append(",");
-			str.append(variableList.get(0).toString());
-			str.append(")->");
-			str.append("System.out.println(\"Values = v1 :");
-			str.append("\"+");
-			str.append(variableList.get(0).toString());
-			if(primitive1 == Primitives.OBJECT ||primitive1 == Primitives.STRING) {
-				str.append(".toString()");
-			}
-			str.append("+\", v2:");
-			str.append("\"+");
-			str.append(variableList.get(1).toString());
-			if(primitive2 == Primitives.OBJECT ||primitive2 == Primitives.STRING) {
-				str.append(".toString()");
-			}
-			str.append(");\n");
-
-			break;
 
 		}
-		output=str.toString();
+
+		str.append("{");
+		str.append("\nSystem.out.print(\"This method has " + variableList.size() + " number of arguments\");");
+		if (functionalInterface.getMethodSignatures().getReturnType() != null) {
+			str.append(generateReturnStatement(functionalInterface.getMethodSignatures().getReturnType()));
+		}
+
+		str.append("\n};");
+		str.append("\n"+functionalInterface.getName()+"obj."+functionalInterface.getMethodSignatures().getName()+"(");
+		if (numberOfParams == 0) {
+			str.append(");");
+		}else {
+			for (int i = 0; i < numberOfParams; i++) {
+				namesStr = namesStr.length() > 0 ? namesStr.append(",").append("null")
+						: namesStr.append("null");
+				
+			}
+		}
+
+		output = str.toString();
 		System.out.println("created lambda expression :" + output);
 		return output;
+	}
+	
+	/**
+	 * Generates an appropriate return statement for the Method.
+	 * @return 
+	 */
+	private String generateReturnStatement(Primitives  returntype) {
+		StringBuilder builder = new StringBuilder("\nreturn ");
+		builder.append("(");
+		builder.append(returntype);
+		builder.append(")");
+
+		
+		Operand operand;
+
+		operand = new Literal(returntype);
+		
+
+		builder.append(operand);
+		builder.append(";\n");
+		return builder.toString();
 	}
 
 }
