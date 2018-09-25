@@ -40,7 +40,7 @@ public class RugratUI extends JFrame {
 
 		JPanel jsp1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		JPanel  jsp2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-	
+	 
 
 		jsp1.setAutoscrolls(true);
 		showFiles(jsp1, jsp2,path);
@@ -94,7 +94,7 @@ public class RugratUI extends JFrame {
 					String value="";
 					for (int i = 0, n = elements.length; i < n; i++) {
 
-						value += elements[i] + "\\";
+						value += elements[i] + File.separator;
 					}
 					value=value.substring(0, value.length() - 1);
 					File f= new File(value);
