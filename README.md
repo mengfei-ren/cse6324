@@ -8,7 +8,7 @@ How to run?
 
   1. Double click RUGRAT_LAMBDA.jar and it will open a window for user to input properties.
   2. Input desired benchmark properties. If user want to generate lambda expressions, just type 'YES' in the corresponding field. Most fields have tooltips.
-  3. Click 'Generate' to generates desired test programs. All the generations will be saved in 'TestPrograms' directory.
+  3. Click 'Generate' to generates desired test programs. All the java programs generated will be saved in 'TestPrograms' directory.
   4. User can also load properties from an existing configuration file. 
   5. User can save the current properties to a XML file for future generation.
 
