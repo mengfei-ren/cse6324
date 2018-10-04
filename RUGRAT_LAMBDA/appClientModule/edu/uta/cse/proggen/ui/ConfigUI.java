@@ -162,6 +162,12 @@ public class ConfigUI extends javax.swing.JFrame {
 		jTextAllowLambdaExpressions = new JTextField();
 		jLabelAllowLambdaExpressions = new JLabel();
 
+		// listOfLambdaExpressions
+		
+		String[] choices = { "Type 1","Type 2"}; 
+		jListLambdaExpressions = new javax.swing.JComboBox<String>(choices);
+		jLabelListLambdaExpressions = new JLabel();		
+		
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
@@ -277,6 +283,10 @@ public class ConfigUI extends javax.swing.JFrame {
 		jTextAllowLambdaExpressions.setText("NO");
 		jLabelAllowLambdaExpressions.setToolTipText("This will generate lambda expressions.");
 
+		// listOfLambdaExpressions
+		jListLambdaExpressions.setName("listLambdaExps");
+		jLabelListLambdaExpressions.setToolTipText("Select Lambda Expression Type");		
+		
 		jCheckBox1.setText("char");
 		jCheckBox1.setName("char"); // NOI18N
 
@@ -369,6 +379,8 @@ public class ConfigUI extends javax.swing.JFrame {
 		jLabelReachability.setText("Create Reachability Matrix? (YES/NO)");
 
 		jLabelAllowLambdaExpressions.setText("Create Lambda Expressions? (YES/NO)");
+		
+		jLabelListLambdaExpressions.setText("Lambda Expression Type ");		
 
 		jButton1.setText("Generate");
 		jButton1.setName("generate"); // NOI18N
@@ -435,6 +447,8 @@ public class ConfigUI extends javax.swing.JFrame {
 														.addComponent(jLabelAllowIndirectRecursion)
 														.addComponent(jLabelReachability)
 														.addComponent(jLabelAllowLambdaExpressions)
+														
+														.addComponent(jLabelListLambdaExpressions)														
 														.addComponent(jLabel1).addComponent(jLabel3)
 														.addComponent(jLabel26))
 												.addGap(51, 51, 51)
@@ -543,6 +557,13 @@ public class ConfigUI extends javax.swing.JFrame {
 																jTextAllowLambdaExpressions,
 																javax.swing.GroupLayout.PREFERRED_SIZE, 200,
 																javax.swing.GroupLayout.PREFERRED_SIZE)
+														
+														//ListLambdaExpressions
+														.addComponent(
+																jListLambdaExpressions,
+																javax.swing.GroupLayout.PREFERRED_SIZE, 200,
+																javax.swing.GroupLayout.PREFERRED_SIZE)
+														
 														.addGroup(layout.createSequentialGroup().addGroup(layout
 																.createParallelGroup(
 																		javax.swing.GroupLayout.Alignment.LEADING)
@@ -705,10 +726,17 @@ public class ConfigUI extends javax.swing.JFrame {
 						.addComponent(jLabelReachability).addComponent(jTextReachability,
 								javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
 				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+				
 				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
 						.addComponent(jLabelAllowLambdaExpressions).addComponent(jTextAllowLambdaExpressions,
 								javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
 				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+				
+				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+						.addComponent(jLabelListLambdaExpressions).addComponent(jListLambdaExpressions,
+								javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+				
 				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(jLabel17)
 						.addComponent(jCheckBox3).addComponent(jCheckBox1).addComponent(jCheckBox2))
 				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1426,5 +1454,9 @@ public class ConfigUI extends javax.swing.JFrame {
 	private javax.swing.JTextField jTextAllowLambdaExpressions;
 	private javax.swing.JLabel jLabelAllowLambdaExpressions;
 
+	// listOfLambdaExpressions
+	private javax.swing.JComboBox<String> jListLambdaExpressions;
+	private javax.swing.JLabel jLabelListLambdaExpressions;
+	
 	// End of variables declaration//GEN-END:variables
 }
