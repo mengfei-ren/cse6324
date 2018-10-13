@@ -31,16 +31,12 @@ public class RugratUI extends JFrame {
 
 	public RugratUI(String path) {
 
-		setTitle("Rugrat");
-
-		Dimension DimMax = Toolkit.getDefaultToolkit().getScreenSize();
-		setMaximumSize(DimMax);
-
-		setExtendedState(JFrame.MAXIMIZED_BOTH);
+		setTitle("RURGRAT Test Programs Directory");
+		
+		setSize(1000, 850);
 
 		JPanel jsp1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		JPanel  jsp2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-	 
 
 		jsp1.setAutoscrolls(true);
 		showFiles(jsp1, jsp2,path);

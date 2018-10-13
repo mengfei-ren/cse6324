@@ -11,6 +11,7 @@
 
 package edu.uta.cse.proggen.ui;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedOutputStream;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
+import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -163,8 +165,7 @@ public class ConfigUI extends javax.swing.JFrame {
 		jLabelAllowLambdaExpressions = new JLabel();
 
 		// listOfLambdaExpressions
-		
-		String[] choices = { "Type 1","Type 2"}; 
+		String[] choices = { "","Thread","Sorting"}; 
 		jListLambdaExpressions = new javax.swing.JComboBox<String>(choices);
 		jLabelListLambdaExpressions = new JLabel();		
 		
@@ -384,13 +385,13 @@ public class ConfigUI extends javax.swing.JFrame {
 
 		jButton1.setText("Generate");
 		jButton1.setName("generate"); // NOI18N
+		
+		// Generate test programs
 		jButton1.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-
 				processAndWriteToXML();
 				execute();
-
 			}
 		});
 
@@ -409,6 +410,7 @@ public class ConfigUI extends javax.swing.JFrame {
 		jButtonSave.setText("Save current setting");
 		jButtonSave.setName("save");
 
+		// Save configuration to XML file
 		jButtonSave.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -894,6 +896,17 @@ public class ConfigUI extends javax.swing.JFrame {
 				jTextField24.setText(value);
 			else if (name.equals("allowLambdaExpressions"))
 				jTextAllowLambdaExpressions.setText(value.toUpperCase());
+			else if (name.equals("typeLambdaExpressions")) {
+				ComboBoxModel<String> typeList = jListLambdaExpressions.getModel();
+				int noOfTypes = typeList.getSize();
+				for(int j = 0; j < noOfTypes; j++) {
+					String type = typeList.getElementAt(j);
+					if(type.toLowerCase().equals(value)) {
+						jListLambdaExpressions.setSelectedIndex(j);
+						break;
+					}
+				}
+			}
 			else if (name.equals("allowedTypes")) {
 				NodeList types = node.getChildNodes();
 				int noOfTypes = types.getLength();
@@ -1199,6 +1212,7 @@ public class ConfigUI extends javax.swing.JFrame {
 		}
 		properties.put("doReachabilityMatrix", doReachabilityMatrix);
 
+		// Allow Lambda Expression
 		String allowLambdaExpressions = jTextAllowLambdaExpressions.getText().toLowerCase();
 		if (!allowLambdaExpressions.equals("yes") && !allowLambdaExpressions.equals("no")) {
 			JOptionPane.showMessageDialog(this, "Type either YES or NO", "Typo in \"Create Lambda Expressions?\"",
@@ -1207,6 +1221,15 @@ public class ConfigUI extends javax.swing.JFrame {
 
 		}
 		properties.put("allowLambdaExpressions", allowLambdaExpressions);
+		
+		// Type of Lambda Expressions
+		String typeLambdaExpressions = jListLambdaExpressions.getSelectedItem().toString().toLowerCase();
+		if(allowLambdaExpressions.equals("yes") && typeLambdaExpressions.equals("")) {
+			JOptionPane.showMessageDialog(this, "Select a type of Lambda Expressions", "Typo in \"Lambda Expression Type\"",
+					JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		properties.put("typeLambdaExpressions", typeLambdaExpressions);
 
 		boolean isChecked = false;
 
@@ -1347,9 +1370,9 @@ public class ConfigUI extends javax.swing.JFrame {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				ConfigUI frame = new ConfigUI();
+				frame.setSize(800, 1000);
 				frame.setVisible(true);
 				frame.toFront(); // to bring the frame in front.
-
 			}
 		});
 	}
