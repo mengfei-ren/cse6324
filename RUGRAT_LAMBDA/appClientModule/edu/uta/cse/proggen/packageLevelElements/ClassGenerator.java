@@ -55,6 +55,8 @@ public class ClassGenerator {
 	private ArrayList<InterfaceGenerator> interfaceList = new ArrayList<InterfaceGenerator>();
 	private Set<Primitives> returnTypeSet = new HashSet<Primitives>();
 	private ArrayList<FunctionalInterfaceGenerator> fiList = new ArrayList<FunctionalInterfaceGenerator>();
+	private boolean allowLambdaExpressions;
+	private String typeLambdaExpressions;
 
 	/**
 	 * @param fileName
@@ -83,6 +85,9 @@ public class ClassGenerator {
 		this.maxNestedIfs = ConfigurationXMLParser.getPropertyAsInt("maxNestedIfs");
 		this.maxAllowedMethodCalls = ConfigurationXMLParser.getPropertyAsInt("maxAllowedMethodCalls");
 		this.superClass = superClass;
+		this.allowLambdaExpressions = ConfigurationXMLParser.getProperty("allowLambdaExpressions").equals("yes");
+		this.typeLambdaExpressions = ConfigurationXMLParser.getProperty("typeLambdaExpressions");
+
 	}
 
 	/**
@@ -125,17 +130,14 @@ public class ClassGenerator {
 	 * Generates the actual body or content of the class and updates the set
 	 * 'generatedClasses' Set of
 	 * 
-	 * @param classList
-	 *            List of created class objects
-	 * @param generatedClasses
-	 *            Set of already generated class names
-	 * @param functionalInterfaceList 
+	 * @param classList               List of created class objects
+	 * @param generatedClasses        Set of already generated class names
+	 * @param functionalInterfaceList
 	 */
 	public void generate(ArrayList<ClassGenerator> classList, HashSet<String> generatedClasses,
 			HashSet<String> preGeneratedClasses, ArrayList<FunctionalInterfaceGenerator> functionalInterfaceList) {
 		program = "";
 		fiList = functionalInterfaceList;
-
 
 		if (this.getSuperClass() != null && (!generatedClasses.contains(this.getSuperClass().getFileName()))) {
 			this.getSuperClass().generate(classList, generatedClasses, preGeneratedClasses, functionalInterfaceList);
@@ -149,7 +151,7 @@ public class ClassGenerator {
 		appendPackageName();
 
 		// append import statements
-		if (ProgGenUtil.useQueries) {
+		if (ProgGenUtil.useQueries || this.allowLambdaExpressions) {
 			appendImportStatements();
 		}
 
@@ -184,8 +186,29 @@ public class ClassGenerator {
 	}
 
 	private void appendImportStatements() {
-		program += "import java.sql.ResultSet;\n";
-		program += "import java.util.Random;\n\n\n";
+		if(ProgGenUtil.useQueries) {
+			program += "import java.sql.ResultSet;\n";
+			program += "import java.util.Random;\n\n\n";
+		}
+		else if(this.allowLambdaExpressions) {
+			switch (this.typeLambdaExpressions) {
+			case "thread":
+				break;
+			case "predicate interface":
+				program+="import java.util.Arrays;\n" + 
+						"import java.util.List;\n" + 
+						"import java.util.function.Predicate;\n";
+				break;
+
+			case "binary operator":
+				program+="import java.util.function.BinaryOperator";
+
+				
+				break;
+			default:
+				program +="\n\n";
+			}
+		}
 	}
 
 	private void appendInjectedContents() {
@@ -362,11 +385,22 @@ public class ClassGenerator {
 
 			program += str;
 		}
-		System.out.println("Start lambda expression generation");
-		for (Iterator iterator = fiList.iterator(); iterator.hasNext();) {
-			FunctionalInterfaceGenerator functionalInterfaceGenerator = (FunctionalInterfaceGenerator) iterator.next();
-			program += new LambdaExpression(functionalInterfaceGenerator).toString()+"\n";
+		if (allowLambdaExpressions) {
+			System.out.println("Start lambda expression generation");
+			LambdaExpression lambda = null;
+			if (typeLambdaExpressions.equalsIgnoreCase("Custom Functional Interface")) {
+				for (Iterator iterator = fiList.iterator(); iterator.hasNext();) {
+					FunctionalInterfaceGenerator functionalInterfaceGenerator = (FunctionalInterfaceGenerator) iterator
+							.next();
+					lambda = new LambdaExpression(functionalInterfaceGenerator);
+					program += lambda.toString() + "\n";
+				}
+			} else {
+				lambda = new LambdaExpression();
+				program+=lambda.generateStandardLambdaExpressions(typeLambdaExpressions);
+			}
 			System.out.println("lambda expression generated..");
+
 		}
 		program += "}\n";
 	}

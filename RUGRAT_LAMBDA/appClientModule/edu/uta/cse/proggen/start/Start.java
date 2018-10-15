@@ -40,7 +40,7 @@ public class Start {
 		if (args.length == 1) {
 			pathToDir = args[0] + File.separator;
 		}
-		String outputpath="";
+		String outputpath = "";
 		/* List of generated class objects: ClassGenerators */
 		ArrayList<ClassGenerator> list = new ArrayList<ClassGenerator>();
 		ArrayList<InterfaceGenerator> interfaceList = new ArrayList<InterfaceGenerator>();
@@ -51,6 +51,7 @@ public class Start {
 		int noOfInheritanceChains = 0;
 		int noOfInterfaces = 0;
 		int maxInterfacesToImplement = 0;
+		boolean allowLambdaExpressions = false;
 
 		/* Set of generated classes, it's updated in ClassGenerator.generate() */
 		HashSet<String> generatedClasses = new HashSet<String>();
@@ -66,6 +67,7 @@ public class Start {
 																										// "E-F-G"
 			noOfInterfaces = ConfigurationXMLParser.getPropertyAsInt("noOfInterfaces");
 			maxInterfacesToImplement = ConfigurationXMLParser.getPropertyAsInt("maxInterfacesToImplement");
+			allowLambdaExpressions = ConfigurationXMLParser.getProperty("allowLambdaExpressions").equals("yes");
 
 			if (numberOfClasses < (maxInheritanceDepth * noOfInheritanceChains)) {
 				System.out.println("Insufficent number of classes. Should be atleast: "
@@ -99,7 +101,7 @@ public class Start {
 			File directory = new File(pathToDir + "TestPrograms" + File.separator + "com" + File.separator + "accenture"
 					+ File.separator + "lab" + File.separator + "carfast" + File.separator + "test");
 
-			outputpath=directory.getAbsolutePath();
+			outputpath = directory.getAbsolutePath();
 			if (!directory.exists()) {
 				System.out.println(directory.mkdirs());
 			}
@@ -108,14 +110,17 @@ public class Start {
 				interfaceList.add(generator);
 				writeToFile(generator);
 			}
-			
-			//create functional interface
-			FunctionalInterfaceGenerator fiGenerator = new FunctionalInterfaceGenerator(className + "FunctionalInterface" , list);
-			//remove the recursive counter that is added from the default interface method signature generator
-			fiGenerator.getMethodSignatures().getParameterList().remove(0);
-			functionalInterfaceList.add(fiGenerator);
-			writeToFile(fiGenerator);
-			
+
+			if (allowLambdaExpressions) {
+				// create functional interface
+				FunctionalInterfaceGenerator fiGenerator = new FunctionalInterfaceGenerator(
+						className + "FunctionalInterface", list);
+				// remove the recursive counter that is added from the default interface method
+				// signature generator
+				fiGenerator.getMethodSignatures().getParameterList().remove(0);
+				functionalInterfaceList.add(fiGenerator);
+				writeToFile(fiGenerator);
+			}
 			establishClassRelationships(inheritanceHierarchies, list);
 
 			establishClassInterfaceRelationships(interfaceList, list);
@@ -143,7 +148,7 @@ public class Start {
 			// based on the earlier version.
 			if (!generatedClasses.contains(generator.getFileName())) {
 				// call generate to construct the class contents
-				generator.generate(list, generatedClasses, preGeneratedClasses,functionalInterfaceList);
+				generator.generate(list, generatedClasses, preGeneratedClasses, functionalInterfaceList);
 			}
 			writeToFile(generator);
 		}
