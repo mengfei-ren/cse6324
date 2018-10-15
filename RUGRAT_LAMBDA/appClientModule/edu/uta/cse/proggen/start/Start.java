@@ -52,6 +52,8 @@ public class Start {
 		int noOfInterfaces = 0;
 		int maxInterfacesToImplement = 0;
 		boolean allowLambdaExpressions = false;
+		String typeLambdaExpressions = "";
+
 
 		/* Set of generated classes, it's updated in ClassGenerator.generate() */
 		HashSet<String> generatedClasses = new HashSet<String>();
@@ -68,7 +70,8 @@ public class Start {
 			noOfInterfaces = ConfigurationXMLParser.getPropertyAsInt("noOfInterfaces");
 			maxInterfacesToImplement = ConfigurationXMLParser.getPropertyAsInt("maxInterfacesToImplement");
 			allowLambdaExpressions = ConfigurationXMLParser.getProperty("allowLambdaExpressions").equals("yes");
-
+			typeLambdaExpressions = ConfigurationXMLParser.getProperty("typeLambdaExpressions");
+			
 			if (numberOfClasses < (maxInheritanceDepth * noOfInheritanceChains)) {
 				System.out.println("Insufficent number of classes. Should be atleast: "
 						+ maxInheritanceDepth * noOfInheritanceChains);
@@ -111,7 +114,7 @@ public class Start {
 				writeToFile(generator);
 			}
 
-			if (allowLambdaExpressions) {
+			if (allowLambdaExpressions && typeLambdaExpressions.equals("custom functional interface")) {
 				// create functional interface
 				FunctionalInterfaceGenerator fiGenerator = new FunctionalInterfaceGenerator(
 						className + "FunctionalInterface", list);
