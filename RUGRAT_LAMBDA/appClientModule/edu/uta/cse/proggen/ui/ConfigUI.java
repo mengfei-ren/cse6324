@@ -11,9 +11,10 @@
 
 package edu.uta.cse.proggen.ui;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -283,9 +284,32 @@ public class ConfigUI extends javax.swing.JFrame {
 		jTextAllowLambdaExpressions.setName("lambdaExps");
 		jTextAllowLambdaExpressions.setText("NO");
 		jLabelAllowLambdaExpressions.setToolTipText("This will generate lambda expressions.");
+		
+		// Only enable dropdown list when Lambda Expression is selected
+		jTextAllowLambdaExpressions.addKeyListener(new KeyListener() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				checkLambdaExpressionEnable();
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				checkLambdaExpressionEnable();
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				checkLambdaExpressionEnable();
+			}
+			
+		});
 
 		// listOfLambdaExpressions
 		jListLambdaExpressions.setName("listLambdaExps");
+		jListLambdaExpressions.setEnabled(false);  // Only display dropdown list when Lambda is selected
 		jLabelListLambdaExpressions.setToolTipText("Select Lambda Expression Type");		
 		
 		jCheckBox1.setText("char");
@@ -381,7 +405,7 @@ public class ConfigUI extends javax.swing.JFrame {
 
 		jLabelAllowLambdaExpressions.setText("Create Lambda Expressions? (YES/NO)");
 		
-		jLabelListLambdaExpressions.setText("Lambda Expression Type ");		
+		jLabelListLambdaExpressions.setText("Lambda Expression Type ");
 
 		jButton1.setText("Generate");
 		jButton1.setName("generate"); // NOI18N
@@ -788,6 +812,15 @@ public class ConfigUI extends javax.swing.JFrame {
 		}
 		return false;
 	}
+	
+	private void checkLambdaExpressionEnable() {
+		if(jTextAllowLambdaExpressions.getText().equals("YES")) {
+			jListLambdaExpressions.setEnabled(true);
+		} else {
+			jListLambdaExpressions.setEnabled(false);
+			jListLambdaExpressions.setSelectedIndex(0);
+		}
+	}
 
 	private boolean isPositiveNumber(String contents) {
 		try {
@@ -902,6 +935,7 @@ public class ConfigUI extends javax.swing.JFrame {
 				for(int j = 0; j < noOfTypes; j++) {
 					String type = typeList.getElementAt(j);
 					if(type.toLowerCase().equals(value)) {
+						jListLambdaExpressions.setEnabled(true);
 						jListLambdaExpressions.setSelectedIndex(j);
 						break;
 					}
