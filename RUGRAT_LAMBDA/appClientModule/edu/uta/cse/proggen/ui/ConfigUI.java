@@ -814,7 +814,7 @@ public class ConfigUI extends javax.swing.JFrame {
 	}
 	
 	private void checkLambdaExpressionEnable() {
-		if(jTextAllowLambdaExpressions.getText().equals("YES")) {
+		if(jTextAllowLambdaExpressions.getText().toLowerCase().equals("yes")) {
 			jListLambdaExpressions.setEnabled(true);
 		} else {
 			jListLambdaExpressions.setEnabled(false);
