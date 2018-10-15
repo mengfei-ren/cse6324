@@ -164,17 +164,6 @@ public class Start {
 		TreeOfSingleEntryGenerator treeSingleEntryGen = new TreeOfSingleEntryGenerator(list, pathToDir);
 		treeSingleEntryGen.generateTreeOfSingleEntryClass();
 
-		// Generate Lambda Expressions only if allowLambdaExpression is TRUE
-		if(ProgGenUtil.allowLambda.equals("yes")) {
-			String type = ProgGenUtil.typeLambda;
-			switch(type) {
-				case "thread":
-					break;
-				case "sorting":
-					break;
-			}
-		}
-
 		new RugratUI(outputpath);
 		// write the reachability matrix
 		if (ConfigurationXMLParser.getProperty("doReachabilityMatrix").equals("no"))

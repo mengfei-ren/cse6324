@@ -165,7 +165,7 @@ public class ConfigUI extends javax.swing.JFrame {
 		jLabelAllowLambdaExpressions = new JLabel();
 
 		// listOfLambdaExpressions
-		String[] choices = { "","Thread","Sorting"}; 
+		String[] choices = { "","Thread","Binary Operator","Predicate Interface"}; 
 		jListLambdaExpressions = new javax.swing.JComboBox<String>(choices);
 		jLabelListLambdaExpressions = new JLabel();		
 		
