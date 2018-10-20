@@ -27,6 +27,40 @@ public class LambdaExpression extends Expression {
 
 	}
 
+	public LambdaExpression() {
+		super();
+	}
+
+	public String generateStandardLambdaExpressions(String typeLambdaExpressions) {
+		StringBuffer str = new StringBuffer();
+		
+		switch (typeLambdaExpressions) {
+		case "thread":
+
+			str.append(" new Thread(()->{System.out.println(\"New thread created\");}).start(); ");
+			break;
+		case "predicate interface":
+			str.append(" List<String> words = Arrays.asList(\"Java\",\"JavaProgram\",\"abc\",\"XYZ\",\"RUGRAT\"); \n");
+			str.append(" Predicate<String> pr = (s)->s.startsWith(\"J\");\n");
+			str.append("for (String word:words)\n");
+			str.append("        {\n");
+			str.append("            if (pr.test(word))\n");
+			str.append("                System.out.println(word);\n");
+			str.append("        } ");
+			break;
+
+		case "binary operator":
+			str.append("BinaryOperator<Integer> sum = (n1, n2) -> n1 + n2;\n");
+			str.append("System.out.println(sum.apply(" + new Random().nextInt(100) + ", " + new Random().nextInt(100)
+					+ "));\n");
+			break;
+		default:
+			str.append("\n");
+		}
+		return str.toString();
+	}
+
+	
 	public String toString() {
 		StringBuffer str = new StringBuffer();
 		str.append(functionalInterface.getName()+" ");

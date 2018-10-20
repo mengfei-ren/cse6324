@@ -13,6 +13,8 @@ package edu.uta.cse.proggen.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
+import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -162,6 +165,11 @@ public class ConfigUI extends javax.swing.JFrame {
 		jTextAllowLambdaExpressions = new JTextField();
 		jLabelAllowLambdaExpressions = new JLabel();
 
+		// listOfLambdaExpressions
+		String[] choices = { "","Thread","Binary Operator","Predicate Interface","Custom Functional Interface"}; 
+		jListLambdaExpressions = new javax.swing.JComboBox<String>(choices);
+		jLabelListLambdaExpressions = new JLabel();		
+		
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
@@ -276,7 +284,34 @@ public class ConfigUI extends javax.swing.JFrame {
 		jTextAllowLambdaExpressions.setName("lambdaExps");
 		jTextAllowLambdaExpressions.setText("NO");
 		jLabelAllowLambdaExpressions.setToolTipText("This will generate lambda expressions.");
+		
+		// Only enable dropdown list when Lambda Expression is selected
+		jTextAllowLambdaExpressions.addKeyListener(new KeyListener() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				checkLambdaExpressionEnable();
+			}
 
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				checkLambdaExpressionEnable();
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				checkLambdaExpressionEnable();
+			}
+			
+		});
+
+		// listOfLambdaExpressions
+		jListLambdaExpressions.setName("listLambdaExps");
+		jListLambdaExpressions.setEnabled(false);  // Only display dropdown list when Lambda is selected
+		jLabelListLambdaExpressions.setToolTipText("Select Lambda Expression Type");		
+		
 		jCheckBox1.setText("char");
 		jCheckBox1.setName("char"); // NOI18N
 
@@ -369,16 +404,18 @@ public class ConfigUI extends javax.swing.JFrame {
 		jLabelReachability.setText("Create Reachability Matrix? (YES/NO)");
 
 		jLabelAllowLambdaExpressions.setText("Create Lambda Expressions? (YES/NO)");
+		
+		jLabelListLambdaExpressions.setText("Lambda Expression Type ");
 
 		jButton1.setText("Generate");
 		jButton1.setName("generate"); // NOI18N
+		
+		// Generate test programs
 		jButton1.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-
 				processAndWriteToXML();
 				execute();
-
 			}
 		});
 
@@ -397,6 +434,7 @@ public class ConfigUI extends javax.swing.JFrame {
 		jButtonSave.setText("Save current setting");
 		jButtonSave.setName("save");
 
+		// Save configuration to XML file
 		jButtonSave.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -435,6 +473,8 @@ public class ConfigUI extends javax.swing.JFrame {
 														.addComponent(jLabelAllowIndirectRecursion)
 														.addComponent(jLabelReachability)
 														.addComponent(jLabelAllowLambdaExpressions)
+														
+														.addComponent(jLabelListLambdaExpressions)														
 														.addComponent(jLabel1).addComponent(jLabel3)
 														.addComponent(jLabel26))
 												.addGap(51, 51, 51)
@@ -543,6 +583,13 @@ public class ConfigUI extends javax.swing.JFrame {
 																jTextAllowLambdaExpressions,
 																javax.swing.GroupLayout.PREFERRED_SIZE, 200,
 																javax.swing.GroupLayout.PREFERRED_SIZE)
+														
+														//ListLambdaExpressions
+														.addComponent(
+																jListLambdaExpressions,
+																javax.swing.GroupLayout.PREFERRED_SIZE, 200,
+																javax.swing.GroupLayout.PREFERRED_SIZE)
+														
 														.addGroup(layout.createSequentialGroup().addGroup(layout
 																.createParallelGroup(
 																		javax.swing.GroupLayout.Alignment.LEADING)
@@ -705,10 +752,17 @@ public class ConfigUI extends javax.swing.JFrame {
 						.addComponent(jLabelReachability).addComponent(jTextReachability,
 								javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
 				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+				
 				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
 						.addComponent(jLabelAllowLambdaExpressions).addComponent(jTextAllowLambdaExpressions,
 								javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
 				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+				
+				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+						.addComponent(jLabelListLambdaExpressions).addComponent(jListLambdaExpressions,
+								javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+				
 				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(jLabel17)
 						.addComponent(jCheckBox3).addComponent(jCheckBox1).addComponent(jCheckBox2))
 				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -757,6 +811,15 @@ public class ConfigUI extends javax.swing.JFrame {
 			return false;
 		}
 		return false;
+	}
+	
+	private void checkLambdaExpressionEnable() {
+		if(jTextAllowLambdaExpressions.getText().toLowerCase().equals("yes")) {
+			jListLambdaExpressions.setEnabled(true);
+		} else {
+			jListLambdaExpressions.setEnabled(false);
+			jListLambdaExpressions.setSelectedIndex(0);
+		}
 	}
 
 	private boolean isPositiveNumber(String contents) {
@@ -866,6 +929,18 @@ public class ConfigUI extends javax.swing.JFrame {
 				jTextField24.setText(value);
 			else if (name.equals("allowLambdaExpressions"))
 				jTextAllowLambdaExpressions.setText(value.toUpperCase());
+			else if (name.equals("typeLambdaExpressions")) {
+				ComboBoxModel<String> typeList = jListLambdaExpressions.getModel();
+				int noOfTypes = typeList.getSize();
+				for(int j = 0; j < noOfTypes; j++) {
+					String type = typeList.getElementAt(j);
+					if(type.toLowerCase().equals(value)) {
+						jListLambdaExpressions.setEnabled(true);
+						jListLambdaExpressions.setSelectedIndex(j);
+						break;
+					}
+				}
+			}
 			else if (name.equals("allowedTypes")) {
 				NodeList types = node.getChildNodes();
 				int noOfTypes = types.getLength();
@@ -1171,6 +1246,7 @@ public class ConfigUI extends javax.swing.JFrame {
 		}
 		properties.put("doReachabilityMatrix", doReachabilityMatrix);
 
+		// Allow Lambda Expression
 		String allowLambdaExpressions = jTextAllowLambdaExpressions.getText().toLowerCase();
 		if (!allowLambdaExpressions.equals("yes") && !allowLambdaExpressions.equals("no")) {
 			JOptionPane.showMessageDialog(this, "Type either YES or NO", "Typo in \"Create Lambda Expressions?\"",
@@ -1179,6 +1255,15 @@ public class ConfigUI extends javax.swing.JFrame {
 
 		}
 		properties.put("allowLambdaExpressions", allowLambdaExpressions);
+		
+		// Type of Lambda Expressions
+		String typeLambdaExpressions = jListLambdaExpressions.getSelectedItem().toString().toLowerCase();
+		if(allowLambdaExpressions.equals("yes") && typeLambdaExpressions.equals("")) {
+			JOptionPane.showMessageDialog(this, "Select a type of Lambda Expressions", "Typo in \"Lambda Expression Type\"",
+					JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		properties.put("typeLambdaExpressions", typeLambdaExpressions);
 
 		boolean isChecked = false;
 
@@ -1319,9 +1404,9 @@ public class ConfigUI extends javax.swing.JFrame {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				ConfigUI frame = new ConfigUI();
+				frame.setSize(800, 1000);
 				frame.setVisible(true);
 				frame.toFront(); // to bring the frame in front.
-
 			}
 		});
 	}
@@ -1426,5 +1511,9 @@ public class ConfigUI extends javax.swing.JFrame {
 	private javax.swing.JTextField jTextAllowLambdaExpressions;
 	private javax.swing.JLabel jLabelAllowLambdaExpressions;
 
+	// listOfLambdaExpressions
+	private javax.swing.JComboBox<String> jListLambdaExpressions;
+	private javax.swing.JLabel jLabelListLambdaExpressions;
+	
 	// End of variables declaration//GEN-END:variables
 }
