@@ -60,10 +60,10 @@ public class ProgGenUtil {
 	public static String allowArray = ConfigurationXMLParser.getProperty("allowArray");
 
 	// allowLambdaExpressions
-	public static String allowLambda = ConfigurationXMLParser.getProperty("allowLambdaExpressions");
+	public static final String allowLambda = ConfigurationXMLParser.getProperty("allowLambdaExpressions");
 	
 	// type of Lambda Expressions
-	public static String typeLambda = ConfigurationXMLParser.getProperty("typeLambdaExpressions");
+	public static final String typeLambda = ConfigurationXMLParser.getProperty("typeLambdaExpressions");
 
 	/**
 	 * Determines the call type for the method calls generated within a method body.
@@ -744,4 +744,14 @@ public class ProgGenUtil {
 
 		return validPrimitivesInScope;
 	}
+
+	public static String getAllowlambda() {
+		return allowLambda;
+	}
+
+	public static String getTypelambda() {
+		return typeLambda;
+	}
+	
+	
 }

@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import edu.uta.cse.proggen.classLevelElements.Method;
 import edu.uta.cse.proggen.classLevelElements.Type.Primitives;
 import edu.uta.cse.proggen.classLevelElements.Variable;
 import edu.uta.cse.proggen.nodes.Expression;
@@ -18,7 +19,7 @@ public class LambdaExpression extends Expression {
 	private String output = "";
 	FunctionalInterfaceGenerator functionalInterface;
 
-	public LambdaExpression(FunctionalInterfaceGenerator functionalInterface) {
+	public LambdaExpression(Method method, FunctionalInterfaceGenerator functionalInterface) {
 		ArrayList<Variable> abstractMethodParameterList = functionalInterface.getMethodSignatures().getParameterList();
 		this.variableList = new ArrayList<Variable>();
 		this.variableList = abstractMethodParameterList;
@@ -31,7 +32,7 @@ public class LambdaExpression extends Expression {
 		super();
 	}
 
-	public String generateStandardLambdaExpressions(String typeLambdaExpressions) {
+	public String generateStandardLambdaExpressions(Method method,String typeLambdaExpressions) {
 		StringBuffer str = new StringBuffer();
 		
 		switch (typeLambdaExpressions) {

@@ -2,14 +2,17 @@ package edu.uta.cse.proggen.classLevelElements;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Random;
 
 import edu.uta.cse.proggen.classLevelElements.Type.Primitives;
 import edu.uta.cse.proggen.expressions.FieldGenerator;
+import edu.uta.cse.proggen.expressions.LambdaExpression;
 import edu.uta.cse.proggen.expressions.Literal;
 import edu.uta.cse.proggen.expressions.VariableGenerator;
 import edu.uta.cse.proggen.nodes.Operand;
 import edu.uta.cse.proggen.packageLevelElements.ClassGenerator;
+import edu.uta.cse.proggen.packageLevelElements.FunctionalInterfaceGenerator;
 import edu.uta.cse.proggen.statements.ForLoop;
 import edu.uta.cse.proggen.statements.IfElse;
 import edu.uta.cse.proggen.statements.IfStmtIfStmt;
@@ -199,31 +202,60 @@ public class Method {
 			int option = 0;
 			if (ProgGenUtil.getAllowedTypes().contains("int")) {
 				if (ProgGenUtil.getValidPrimitivesInScope(this).contains(Primitives.INT)) {
-					option = rand.nextInt(4);
+					option = rand.nextInt(5);
 				} else {
 					// can contain for-loops but not switch statements
-					option = rand.nextInt(3);
+					option = rand.nextInt(4);
 				}
 			} else {
-				option = rand.nextInt(2);
+				option = rand.nextInt(3);
 			}
 
 			switch (option) {
-			case 0:
+			
+			/*
+			 * for including lambda expression and skip it if lambda expressions is not enabled 
+			 */
+				case 0:
+					
+					if (ProgGenUtil.getAllowlambda().equalsIgnoreCase("yes")) {
+						System.out.println("Start lambda expression generation");
+						LambdaExpression lambda = null;
+						if (ProgGenUtil.getTypelambda().equalsIgnoreCase("Custom Functional Interface")) {
+							for (Iterator iterator = associatedClass.getFiList().iterator(); iterator.hasNext();) {
+								FunctionalInterfaceGenerator functionalInterfaceGenerator = (FunctionalInterfaceGenerator) iterator
+										.next();
+								lambda = new LambdaExpression(this,functionalInterfaceGenerator);
+								output += lambda.toString() + "\n";
+							}
+						} else {
+							lambda = new LambdaExpression();
+							output+=lambda.generateStandardLambdaExpressions(this,ProgGenUtil.getTypelambda());
+						}
+						System.out.println("lambda expression generated..");
+
+					}
+					break;
+					
+			case 1:
 				output += new IfStmtIfStmt(this, classList).toString();
 				break;
-			case 1:
+			case 2:
 				output += new IfElse(this, classList).toString();
 				break;
+				
+				
 			/*
 			 * cases after this not valid if INT is not a user-specified type.
 			 */
-			case 2:
+			case 3:
 				output += new ForLoop(this, classList).toString();
 				break;
-			case 3:
+			case 4:
 				output += new Switch(this, classList).toString();
 				break;
+				
+			
 			}
 		}
 		this.methodBody = output;

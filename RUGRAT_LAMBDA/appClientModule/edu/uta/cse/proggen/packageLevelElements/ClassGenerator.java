@@ -347,6 +347,15 @@ public class ClassGenerator {
 		this.fields = fields;
 	}
 
+	
+	public ArrayList<FunctionalInterfaceGenerator> getFiList() {
+		return fiList;
+	}
+
+	public void setFiList(ArrayList<FunctionalInterfaceGenerator> fiList) {
+		this.fiList = fiList;
+	}
+
 	@Override
 	public String toString() {
 		return program;
@@ -392,12 +401,12 @@ public class ClassGenerator {
 				for (Iterator iterator = fiList.iterator(); iterator.hasNext();) {
 					FunctionalInterfaceGenerator functionalInterfaceGenerator = (FunctionalInterfaceGenerator) iterator
 							.next();
-					lambda = new LambdaExpression(functionalInterfaceGenerator);
+					lambda = new LambdaExpression(null,functionalInterfaceGenerator);
 					program += lambda.toString() + "\n";
 				}
 			} else {
 				lambda = new LambdaExpression();
-				program+=lambda.generateStandardLambdaExpressions(typeLambdaExpressions);
+				program+=lambda.generateStandardLambdaExpressions(null,typeLambdaExpressions);
 			}
 			System.out.println("lambda expression generated..");
 
