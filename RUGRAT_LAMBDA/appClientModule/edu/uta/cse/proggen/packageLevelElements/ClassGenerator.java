@@ -392,13 +392,13 @@ public class ClassGenerator {
 					}
 					builder.append(",");
 				}
-			
+			}
 			String str = builder.toString();
 			str = str.substring(0, str.length() - 1);
 			str += ");\n";
 
 			program += str;
-		}
+		
 	/*	if (allowLambdaExpressions) {
 			System.out.println("Start lambda expression generation");
 			LambdaExpression lambda = null;
