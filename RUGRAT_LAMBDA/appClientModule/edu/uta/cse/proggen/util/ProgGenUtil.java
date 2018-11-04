@@ -47,6 +47,9 @@ public class ProgGenUtil {
 	public static final int minInheritanceDepth = ConfigurationXMLParser.getPropertyAsInt("minInheritanceDepth");
 
 	public static final ArrayList<String> allowedTypes;
+	
+	public static final ArrayList<String> allowedLambdaTypesList;
+	
 	public static final HashMap<String, Primitives> primitivesMap = new HashMap<String, Primitives>();
 	public static final int maxLoopControllerValue = ConfigurationXMLParser.getPropertyAsInt("maxValueForLoop"); // 1000;
 	public static final String dbUserName = ConfigurationXMLParser.getProperty("dbUsername");
@@ -63,7 +66,7 @@ public class ProgGenUtil {
 	public static final String allowLambda = ConfigurationXMLParser.getProperty("allowLambdaExpressions");
 	
 	// type of Lambda Expressions
-	public static final String typeLambda = ConfigurationXMLParser.getProperty("typeLambdaExpressions");
+	//public static final String typeLambda = ConfigurationXMLParser.getProperty("typeLambdaExpressions");
 
 	/**
 	 * Determines the call type for the method calls generated within a method body.
@@ -82,6 +85,7 @@ public class ProgGenUtil {
 	// read config information needed for code generation.
 	static {
 		allowedTypes = getAllowedTypesAsList();
+		allowedLambdaTypesList=getAllowedLambdaTypesAsList();
 		primitivesMap.put("char", Primitives.CHAR);
 		primitivesMap.put("byte", Primitives.BYTE);
 		primitivesMap.put("short", Primitives.SHORT);
@@ -123,6 +127,19 @@ public class ProgGenUtil {
 		}
 		return allowedTypesList;
 	}
+	
+	
+	private static ArrayList<String> getAllowedLambdaTypesAsList() {
+		ArrayList<String> allowedLambdaTypesList = new ArrayList<String>();
+		Set<String> allowedLambdaTypes = ConfigurationXMLParser.getLambdaTypeList();
+		Object[] array = allowedLambdaTypes.toArray();
+		for (Object o : array) {
+			allowedLambdaTypesList.add((String) o);
+		}
+		return allowedLambdaTypesList;
+	}
+	
+	
 
 	/**
 	 * read the contents to be injected into every generated class.
@@ -749,9 +766,12 @@ public class ProgGenUtil {
 		return allowLambda;
 	}
 
-	public static String getTypelambda() {
-		return typeLambda;
+
+	public static ArrayList<String> getAllowedlambdatypeslist() {
+		return allowedLambdaTypesList;
 	}
+
+
 	
 	
 }

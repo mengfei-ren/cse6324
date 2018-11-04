@@ -33,6 +33,7 @@ public class ConfigurationXMLParser {
 	private static Document document = null;
 	private static HashMap<String, String> properties = new HashMap<String, String>();
 	private static LinkedHashSet<String> typeList = new LinkedHashSet<String>();
+	private static LinkedHashSet<String> lambdaTypeList = new LinkedHashSet<String>();
 
 	// read information from the XML as soon as the class is loaded into the JVM
 	static {
@@ -78,9 +79,30 @@ public class ConfigurationXMLParser {
 			if (name.equals("allowedTypes")) {
 				parseAllowedTypes(node);
 				continue;
+			}else if (name.equals("allowedLambdaExpressionTypes")) {
+				parseAllowedLambdaTypes(node);
+				continue;
 			}
 			String value = node.getTextContent();
 			properties.put(name, value);
+		}
+	}
+
+	private static void parseAllowedLambdaTypes(Node node) throws Exception {
+		// TODO Auto-generated method stub
+		if (!node.getNodeName().equals("allowedLambdaExpressionTypes")) {
+			throw new Exception("Invalid node allowedTypes");
+		}
+
+		NodeList typeNodes = node.getChildNodes();
+		int noOfTypes = typeNodes.getLength();
+
+		for (int i = 0; i < noOfTypes; i++) {
+			String str = typeNodes.item(i).getTextContent().trim();
+			if (str.equals("")) {
+				continue;
+			}
+			lambdaTypeList.add(str);
 		}
 	}
 
@@ -107,6 +129,11 @@ public class ConfigurationXMLParser {
 
 	public static String getProperty(String property) {
 		return properties.get(property);
+	}
+
+	
+	public static LinkedHashSet<String> getLambdaTypeList() {
+		return lambdaTypeList;
 	}
 
 	/**

@@ -36,11 +36,11 @@ public class LambdaExpression extends Expression {
 		StringBuffer str = new StringBuffer();
 		
 		switch (typeLambdaExpressions) {
-		case "thread":
+		case "Thread":
 
 			str.append(" new Thread(()->{System.out.println(\"New thread created\");}).start(); ");
 			break;
-		case "predicate interface":
+		case "Predicate Interface":
 			str.append(" List<String> words = Arrays.asList(\"Java\",\"JavaProgram\",\"abc\",\"XYZ\",\"RUGRAT\"); \n");
 			str.append(" Predicate<String> pr = (s)->s.startsWith(\"J\");\n");
 			str.append("for (String word:words)\n");
@@ -50,7 +50,7 @@ public class LambdaExpression extends Expression {
 			str.append("        } ");
 			break;
 
-		case "binary operator":
+		case "Binary Operator":
 			str.append("BinaryOperator<Integer> sum = (n1, n2) -> n1 + n2;\n");
 			str.append("System.out.println(sum.apply(" + new Random().nextInt(100) + ", " + new Random().nextInt(100)
 					+ "));\n");

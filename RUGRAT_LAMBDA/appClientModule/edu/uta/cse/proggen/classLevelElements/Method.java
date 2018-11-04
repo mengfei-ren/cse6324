@@ -221,7 +221,9 @@ public class Method {
 					if (ProgGenUtil.getAllowlambda().equalsIgnoreCase("yes")) {
 						System.out.println("Start lambda expression generation");
 						LambdaExpression lambda = null;
-						if (ProgGenUtil.getTypelambda().equalsIgnoreCase("Custom Functional Interface")) {
+						ArrayList<String> allowedlambdatypeslist = ProgGenUtil.getAllowedlambdatypeslist();
+						int lambdaType = rand.nextInt(allowedlambdatypeslist.size());
+						if (allowedlambdatypeslist.get(lambdaType).equalsIgnoreCase("Custom Functional Interface")) {
 							for (Iterator iterator = associatedClass.getFiList().iterator(); iterator.hasNext();) {
 								FunctionalInterfaceGenerator functionalInterfaceGenerator = (FunctionalInterfaceGenerator) iterator
 										.next();
@@ -230,7 +232,7 @@ public class Method {
 							}
 						} else {
 							lambda = new LambdaExpression();
-							output+=lambda.generateStandardLambdaExpressions(this,ProgGenUtil.getTypelambda());
+							output+=lambda.generateStandardLambdaExpressions(this,allowedlambdatypeslist.get(lambdaType));
 						}
 						System.out.println("lambda expression generated..");
 

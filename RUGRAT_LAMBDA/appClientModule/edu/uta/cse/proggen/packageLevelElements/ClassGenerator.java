@@ -56,7 +56,7 @@ public class ClassGenerator {
 	private Set<Primitives> returnTypeSet = new HashSet<Primitives>();
 	private ArrayList<FunctionalInterfaceGenerator> fiList = new ArrayList<FunctionalInterfaceGenerator>();
 	private boolean allowLambdaExpressions;
-	private String typeLambdaExpressions;
+	private ArrayList<String> typeLambdaExpressions;
 
 	/**
 	 * @param fileName
@@ -86,7 +86,7 @@ public class ClassGenerator {
 		this.maxAllowedMethodCalls = ConfigurationXMLParser.getPropertyAsInt("maxAllowedMethodCalls");
 		this.superClass = superClass;
 		this.allowLambdaExpressions = ConfigurationXMLParser.getProperty("allowLambdaExpressions").equals("yes");
-		this.typeLambdaExpressions = ConfigurationXMLParser.getProperty("typeLambdaExpressions");
+		this.typeLambdaExpressions = ProgGenUtil.getAllowedlambdatypeslist();
 
 	}
 
@@ -191,22 +191,27 @@ public class ClassGenerator {
 			program += "import java.util.Random;\n\n\n";
 		}
 		else if(this.allowLambdaExpressions) {
-			switch (this.typeLambdaExpressions) {
-			case "thread":
+			for (Iterator iterator = this.typeLambdaExpressions.iterator(); iterator.hasNext();) {
+				String lambdaExpType = (String) iterator.next();
+				
+			
+			switch (lambdaExpType) {
+			case "Thread":
 				break;
-			case "predicate interface":
+			case "Predicate Interface":
 				program+="import java.util.Arrays;\n" + 
 						"import java.util.List;\n" + 
 						"import java.util.function.Predicate;\n";
 				break;
 
-			case "binary operator":
-				program+="import java.util.function.BinaryOperator";
+			case "Binary Operator":
+				program+="import java.util.function.BinaryOperator;";
 
 				
 				break;
 			default:
 				program +="\n\n";
+			}
 			}
 		}
 	}
@@ -387,17 +392,17 @@ public class ClassGenerator {
 					}
 					builder.append(",");
 				}
-			}
+			
 			String str = builder.toString();
 			str = str.substring(0, str.length() - 1);
 			str += ");\n";
 
 			program += str;
 		}
-		if (allowLambdaExpressions) {
+	/*	if (allowLambdaExpressions) {
 			System.out.println("Start lambda expression generation");
 			LambdaExpression lambda = null;
-			if (typeLambdaExpressions.equalsIgnoreCase("Custom Functional Interface")) {
+			if (typeLambdaExpressions.contains("Custom Functional Interface")) {
 				for (Iterator iterator = fiList.iterator(); iterator.hasNext();) {
 					FunctionalInterfaceGenerator functionalInterfaceGenerator = (FunctionalInterfaceGenerator) iterator
 							.next();
@@ -410,8 +415,10 @@ public class ClassGenerator {
 			}
 			System.out.println("lambda expression generated..");
 
+		}*/
 		}
 		program += "}\n";
+		
 	}
 
 	// Single Entry point for CarFast
