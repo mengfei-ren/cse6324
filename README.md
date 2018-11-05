@@ -11,6 +11,8 @@ How to run?
   3. Click 'Generate' to generates desired test programs. All the java programs generated will be saved in 'TestPrograms' directory.
   4. User can also load properties from an existing configuration file. 
   5. User can save the current properties to a XML file for future generation.
+  
+  P.S. config.xml is a sample configuration file if needed. The folder TestPrograms is the directory of sample test programs generated with Lambda Expressions.
 
 Know issue(s):
 ----------------------------------------------------
