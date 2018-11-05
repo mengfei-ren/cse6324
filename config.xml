@@ -20,11 +20,10 @@
 <noOfInterfaces>3</noOfInterfaces>
 <probability>20</probability>
 <maxNoOfMethodsPerClass>10</maxNoOfMethodsPerClass>
-<maxNoOfClassFields>0</maxNoOfClassFields>
+<maxNoOfClassFields>8</maxNoOfClassFields>
 <maxInterfacesToImplement>2</maxInterfacesToImplement>
 <maxRecursionDepth>2</maxRecursionDepth>
-<typeLambdaExpressions>predicate interface</typeLambdaExpressions>
-<minNoOfClassFields>0</minNoOfClassFields>
+<minNoOfClassFields>2</minNoOfClassFields>
 <minInheritanceDepth>3</minInheritanceDepth>
 <queryFilename></queryFilename>
 <noOfInheritanceChains>4</noOfInheritanceChains>
@@ -35,6 +34,12 @@
 <doReachabilityMatrix>no</doReachabilityMatrix>
 <maxNestedIfs>2</maxNestedIfs>
 <allowedTypes>
+	<type>byte</type>
 	<type>int</type>
+	<type>String</type>
 </allowedTypes>
+<allowedLambdaExpressionTypes>
+	<type>Thread</type>
+	<type>Predicate Interface</type>
+</allowedLambdaExpressionTypes>
 </RUGRAT>
